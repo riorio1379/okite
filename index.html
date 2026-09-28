@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>二人の掟</title>
 <meta name="theme-color" content="#000000">
-<meta name="app-build" content="20260929-021019">
+<meta name="app-build" content="20260929-021626">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="description" content="桃香と理央の掟。">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -127,6 +127,9 @@
     font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:center;gap:7px;
     position:relative;z-index:1}
   .bill .go svg{width:17px;height:17px}
+  .bill.other{background:linear-gradient(140deg,#161033 0%,#2C2160 52%,#4B36A8 100%);
+    box-shadow:0 10px 28px rgba(76,54,168,.3);margin-top:12px}
+  .bill.other::after{background:rgba(255,255,255,.07)}
   .sect{margin-top:22px}
   .sect h2{font-size:15.5px;font-weight:700;margin:0 0 9px;padding-inline:16px;letter-spacing:-.01em}
   .rail{display:flex;gap:8px;overflow-x:auto;padding:0 16px 3px;scrollbar-width:none;
@@ -755,7 +758,6 @@ function vHome(){
   var todo=mn.concat(mo);
   if(todo.length){
     h+='<div class="bill">'+
-       '<div class="eb">'+esc(NAME[me])+' ・ まだ やっていない</div>'+
        '<div class="n">'+todo.length+'<small>件の罰ゲーム</small></div><ul>'+
        todo.slice(0,4).map(function(p){
          return '<li>'+(p.by?'<i>'+esc(NAME[p.by]||'')+'から</i>':'')+
@@ -765,6 +767,24 @@ function vHome(){
        '<button class="go" data-act="tab" data-tab="list">'+
        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg>'+
        '終わったら記録する</button></div>';
+  }
+  var ot=(me==='rio'?'momoka':'rio');
+  var assigned=S.pending.concat(S.newList,S.doneList).filter(function(p){ return p.who===ot; }).length;
+  var unpaid=Math.max(0,totalVio(ot)-assigned);
+  var oleft=S.pending.concat(S.newList).filter(function(p){ return p.who===ot; }).length;
+  if(unpaid||oleft){
+    h+='<div class="bill other">'+
+      '<div class="eb">'+esc(NAME[ot])+' の ようす</div>'+
+      (unpaid
+        ? '<div class="n">'+unpaid+'<small>回ぶん 決まっていない</small></div>'+
+          '<ul><li><span>'+esc(NAME[ot])+'が掟を破ったのに、罰ゲームがまだ決まっていません。'+
+          'こちらから決めて送れます。</span></li>'+
+          (oleft?'<li><span>ほかに '+oleft+' 件、まだ実行していません</span></li>':'')+'</ul>'
+        : '<div class="n">'+oleft+'<small>件 まだ実行していない</small></div>'+
+          '<ul><li><span>追加で科すこともできます。</span></li></ul>')+
+      '<button class="go" data-act="propose">'+
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>'+
+      '罰ゲームを決めて送る</button></div>';
   }
   h+='<div class="sect"><h2>今月の違反ランキング</h2><div class="rail">';
   rank.forEach(function(r,i){
@@ -1121,6 +1141,14 @@ document.addEventListener('click',function(ev){
   if(a==='done'){
     addEv({k:'pc',id:el.getAttribute('data-id')});
     blip(880); buzz(); render(); return; }
+  if(a==='propose'){
+    tab='list'; newTarget=(me==='rio'?'momoka':'rio'); openId=null; blip(660); render();
+    window.scrollTo(0,0);
+    setTimeout(function(){
+      var f=document.getElementById('newPen');
+      if(f){ try{ f.scrollIntoView({block:'center'}); }catch(e){} f.focus(); }
+    },140);
+    return; }
   if(a==='ackone'){
     addEv({k:'pv',id:el.getAttribute('data-id')});
     blip(760); buzz(); render(); return; }
@@ -1161,7 +1189,7 @@ document.addEventListener('click',function(ev){
 },false);
 
 /* ---- 新しい版が出ていたら、自動で入れ替わる ---- */
-var BUILD='20260929-021019';
+var BUILD='20260929-021626';
 setTimeout(function(){
   try{
     if(sessionStorage.getItem('okite-reloaded')) return;
