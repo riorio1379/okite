@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>二人の掟</title>
 <meta name="theme-color" content="#000000">
-<meta name="app-build" content="20260929-020425">
+<meta name="app-build" content="20260929-021019">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="description" content="桃香と理央の掟。">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -109,6 +109,24 @@
   .nav-ic{display:flex;gap:18px;align-items:center}
   .nav-ic svg{width:22px;height:22px;display:block}
   .nlogo{width:19px;height:34px;flex:none}
+  .bill{margin:8px 16px 0;border-radius:12px;padding:20px 18px 18px;position:relative;overflow:hidden;
+    background:linear-gradient(140deg,#5E040C 0%,#C20710 52%,#FF2E3C 100%);
+    box-shadow:0 10px 28px rgba(229,9,20,.28);animation:fadeUp .5s var(--ease) both}
+  .bill::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;
+    border-radius:50%;background:rgba(255,255,255,.08)}
+  .bill .eb{font-size:9.5px;letter-spacing:.3em;font-weight:700;color:rgba(255,255,255,.82);
+    position:relative;z-index:1}
+  .bill .n{font-size:52px;font-weight:900;line-height:1;margin:7px 0 0;position:relative;z-index:1}
+  .bill .n small{font-size:15px;font-weight:700;margin-left:7px}
+  .bill ul{margin:13px 0 0;padding:0;list-style:none;position:relative;z-index:1}
+  .bill li{font-size:13px;font-weight:700;line-height:1.5;padding:8px 0;
+    border-top:1px solid rgba(255,255,255,.28);display:flex;gap:8px;align-items:flex-start}
+  .bill li i{font-style:normal;font-size:9.5px;font-weight:700;background:rgba(0,0,0,.28);
+    border-radius:99px;padding:2px 7px;flex:none;margin-top:1px}
+  .bill .go{margin-top:15px;background:#fff;color:#000;border-radius:4px;min-height:44px;width:100%;
+    font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:center;gap:7px;
+    position:relative;z-index:1}
+  .bill .go svg{width:17px;height:17px}
   .sect{margin-top:22px}
   .sect h2{font-size:15.5px;font-weight:700;margin:0 0 9px;padding-inline:16px;letter-spacing:-.01em}
   .rail{display:flex;gap:8px;overflow-x:auto;padding:0 16px 3px;scrollbar-width:none;
@@ -732,6 +750,22 @@ var selK=today(), vY=new Date().getFullYear(), vM=new Date().getMonth();
 
 function vHome(){
   var h='', rank=RULES.slice().sort(function(a,b){ return monthBad(b.id)-monthBad(a.id); });
+  var mn=S.newList.filter(function(p){ return p.who===me; });
+  var mo=S.pending.filter(function(p){ return p.who===me; });
+  var todo=mn.concat(mo);
+  if(todo.length){
+    h+='<div class="bill">'+
+       '<div class="eb">'+esc(NAME[me])+' ・ まだ やっていない</div>'+
+       '<div class="n">'+todo.length+'<small>件の罰ゲーム</small></div><ul>'+
+       todo.slice(0,4).map(function(p){
+         return '<li>'+(p.by?'<i>'+esc(NAME[p.by]||'')+'から</i>':'')+
+           '<span>'+esc(p.text)+'</span></li>'; }).join('')+
+       (todo.length>4?'<li><span>ほか '+(todo.length-4)+' 件</span></li>':'')+
+       '</ul>'+
+       '<button class="go" data-act="tab" data-tab="list">'+
+       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg>'+
+       '終わったら記録する</button></div>';
+  }
   h+='<div class="sect"><h2>今月の違反ランキング</h2><div class="rail">';
   rank.forEach(function(r,i){
     h+='<button class="top3" data-act="open" data-rule="'+r.id+'"><span class="rank">'+(i+1)+'</span>'+
@@ -1127,7 +1161,7 @@ document.addEventListener('click',function(ev){
 },false);
 
 /* ---- 新しい版が出ていたら、自動で入れ替わる ---- */
-var BUILD='20260929-020425';
+var BUILD='20260929-021019';
 setTimeout(function(){
   try{
     if(sessionStorage.getItem('okite-reloaded')) return;
