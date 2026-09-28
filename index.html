@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>二人の掟</title>
 <meta name="theme-color" content="#000000">
-<meta name="app-build" content="20260929-021626">
+<meta name="app-build" content="20260929-022207">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="description" content="桃香と理央の掟。">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -758,15 +758,15 @@ function vHome(){
   var todo=mn.concat(mo);
   if(todo.length){
     h+='<div class="bill">'+
-       '<div class="n">'+todo.length+'<small>件の罰ゲーム</small></div><ul>'+
+       '<div class="n">'+todo.length+'<small>件 未実行</small></div><ul>'+
        todo.slice(0,4).map(function(p){
-         return '<li>'+(p.by?'<i>'+esc(NAME[p.by]||'')+'から</i>':'')+
+         return '<li>'+(p.by?'<i>'+esc(NAME[p.by]||'')+'から</i>':'<i>未確認</i>')+
            '<span>'+esc(p.text)+'</span></li>'; }).join('')+
-       (todo.length>4?'<li><span>ほか '+(todo.length-4)+' 件</span></li>':'')+
+       (todo.length>4?'<li><i>ほか</i><span>'+(todo.length-4)+'件</span></li>':'')+
        '</ul>'+
        '<button class="go" data-act="tab" data-tab="list">'+
        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg>'+
-       '終わったら記録する</button></div>';
+       '実行の記録</button></div>';
   }
   var ot=(me==='rio'?'momoka':'rio');
   var assigned=S.pending.concat(S.newList,S.doneList).filter(function(p){ return p.who===ot; }).length;
@@ -774,17 +774,15 @@ function vHome(){
   var oleft=S.pending.concat(S.newList).filter(function(p){ return p.who===ot; }).length;
   if(unpaid||oleft){
     h+='<div class="bill other">'+
-      '<div class="eb">'+esc(NAME[ot])+' の ようす</div>'+
       (unpaid
-        ? '<div class="n">'+unpaid+'<small>回ぶん 決まっていない</small></div>'+
-          '<ul><li><span>'+esc(NAME[ot])+'が掟を破ったのに、罰ゲームがまだ決まっていません。'+
-          'こちらから決めて送れます。</span></li>'+
-          (oleft?'<li><span>ほかに '+oleft+' 件、まだ実行していません</span></li>':'')+'</ul>'
-        : '<div class="n">'+oleft+'<small>件 まだ実行していない</small></div>'+
-          '<ul><li><span>追加で科すこともできます。</span></li></ul>')+
+        ? '<div class="n">'+unpaid+'<small>回分 未決定</small></div>'
+        : '<div class="n">'+oleft+'<small>件 未実行</small></div>')+
+      '<ul><li><i>対象</i><span>'+esc(NAME[ot])+'</span></li>'+
+      (unpaid?'<li><i>罰ゲーム</i><span>未決定 '+unpaid+'件</span></li>':'')+
+      (oleft?'<li><i>未実行</i><span>'+oleft+'件</span></li>':'')+'</ul>'+
       '<button class="go" data-act="propose">'+
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>'+
-      '罰ゲームを決めて送る</button></div>';
+      '罰ゲームの送信</button></div>';
   }
   h+='<div class="sect"><h2>今月の違反ランキング</h2><div class="rail">';
   rank.forEach(function(r,i){
@@ -897,10 +895,10 @@ function vList(){
     h+=mine.map(function(p){ return penRow(p,'open'); }).join('');
     h+=mdone.map(function(p){ return penRow(p,'done'); }).join('');
     h+='<div style="padding:11px 16px 0;color:#808080;font-size:10.5px">'+
-       'タップすると「まだ」と「実行済み」を切り替えられます。</div>';
+       'タップで 状態の切替</div>';
   }else{
     h+='<div style="padding:22px 16px;color:#808080;font-size:12px">'+
-       '科された罰ゲームはありません。</div>';
+       '該当なし</div>';
   }
   h+='</div>';
 
@@ -914,7 +912,7 @@ function vList(){
      '<button class="bigbtn b-red" data-act="give" style="margin:0">'+
      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>送る</button>'+
      '<div style="font-size:10.5px;color:#808080;margin-top:11px;line-height:1.7">'+
-     '送ると相手の画面に全面で出ます。<b style="color:#E5E5E5">相手が「確認しました」を押すまで消えません。</b>'+
+     '送信先の画面に全面表示 ・ <b style="color:#E5E5E5">相手の確認まで消えません</b>'+
      '</div></div></div>';
 
   var favs=RULES.filter(function(r){ return S.fav[r.id]; });
@@ -1028,7 +1026,7 @@ function renderAck(){
   box.innerHTML='<div class="ack"><div class="ackbox">'+
     '<div class="eb">'+esc(NAME[list[0].by]||'')+' より</div>'+
     '<h3>罰ゲームが届きました</h3>'+
-    '<p class="sb">確認するまで、この画面は閉じられません。</p>'+
+    '<p class="sb">要確認 ・ 確認まで閉じられません</p>'+
     list.map(function(p){
       return '<div class="ackitem"><div class="at">'+esc(p.text)+'</div>'+
         '<div class="am">'+esc(p.date)+' ・ '+esc(NAME[p.by]||'')+'が科しました</div>'+
@@ -1189,7 +1187,7 @@ document.addEventListener('click',function(ev){
 },false);
 
 /* ---- 新しい版が出ていたら、自動で入れ替わる ---- */
-var BUILD='20260929-021626';
+var BUILD='20260929-022207';
 setTimeout(function(){
   try{
     if(sessionStorage.getItem('okite-reloaded')) return;
