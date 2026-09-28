@@ -270,6 +270,17 @@
   .chip.t-rio{background:rgba(58,160,255,.2);color:#7FC2FF}
   .del{width:30px;height:30px;border-radius:50%;background:#1F1F1F;display:grid;place-content:center;flex:none}
   .del svg{width:12px;height:12px;color:var(--g3)}
+  .pen{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+    padding:13px 16px;border-bottom:1px solid #181818;background:none}
+  .pen:active{background:#0E0E0E}
+  .pen .px{width:34px;height:34px;border-radius:50%;background:#1F1F1F;display:grid;place-content:center;
+    flex:none;font-weight:900;font-size:13px;color:var(--nf)}
+  .pen .pin{flex:1;min-width:0}
+  .pen .pt{display:block;font-size:13px;font-weight:700;line-height:1.45;word-break:break-word}
+  .pen .pm{display:block;font-size:10.5px;color:var(--g3);margin-top:3px}
+  .pen .pill{flex:none;align-self:center}
+  .pen.ok .px{background:rgba(70,211,105,.15);color:var(--grn)}
+  .pen.ok .pt{color:var(--g3);text-decoration:line-through}
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px}
   .stat{background:var(--card);border-radius:6px;padding:12px 10px;text-align:center}
   .stat .n{font-size:24px;font-weight:900;line-height:1}
@@ -364,7 +375,7 @@ function saveLocal(){ try{ localStorage.setItem(LKEY,JSON.stringify(EV));
   localStorage.setItem(LLOC,JSON.stringify(LOC)); }catch(e){} }
 function save(){ saveLocal(); push(); }
 /* 受け取ったイベントは全て検証する。行は誰でも書けるので、中身を信用しない */
-var KINDS={'v':1,'v-':1,'s':1,'pa':1,'pd':1,'pn':1,'pc':1,'pk':1,'f':1,'rt':1,'zz':1};
+var KINDS={'v':1,'v-':1,'s':1,'pa':1,'pd':1,'pn':1,'pc':1,'pu':1,'pk':1,'f':1,'rt':1,'zz':1};
 var WHO={momoka:1,rio:1}, RID={reply:1,plan:1,eye:1}, TG={both:1,momoka:1,rio:1};
 function sid(x){ return (typeof x==='string'&&/^[A-Za-z0-9_.:-]{1,64}$/.test(x))?x:null; }
 function stx(x,n){ return (typeof x==='string'&&x.length>0&&x.length<=n)?x:null; }
@@ -378,7 +389,7 @@ function okEv(e){
   else if(e.k==='s'){ if(!o.w||!isDay(e.d)) return null; o.d=e.d; o.v=!!e.v; }
   else if(e.k==='pa'){ if(!sid(e.id)||!stx(e.tx,200)||!TG[e.tg]) return null;
     o.id=e.id; o.tx=e.tx; o.tg=e.tg; }
-  else if(e.k==='pd'||e.k==='pc'||e.k==='pk'){ if(!sid(e.id)) return null; o.id=e.id; }
+  else if(e.k==='pd'||e.k==='pc'||e.k==='pu'||e.k==='pk'){ if(!sid(e.id)) return null; o.id=e.id; }
   else if(e.k==='pn'){ if(!o.w||!sid(e.id)||!stx(e.tx,200)) return null;
     o.id=e.id; o.tx=e.tx;
     o.no=(typeof e.no==='number'&&e.no>=0&&e.no<=999)?(e.no|0):0;
@@ -398,7 +409,7 @@ function addEv(e){ e.i=e.i||uid(); e.t=e.t||Date.now();
 function fold(){
   EV.sort(function(a,b){ return (a.t||0)-(b.t||0); });
   var cut=0; EV.forEach(function(e){ if(e.k==='zz'&&e.t>cut) cut=e.t; });
-  var days={}, pool=[], del={}, pn={}, closed={}, doneIds={}, fav={}, rate={};
+  var days={}, pool=[], del={}, pn={}, st={}, fav={}, rate={};
   DEF.forEach(function(t,i){ pool.push({id:'d'+i,text:t,target:'both',by:null}); });
   function D(k){ if(!days[k]) days[k]={v:{momoka:{},rio:{}},sent:{}}; return days[k]; }
   EV.forEach(function(e){
@@ -409,17 +420,22 @@ function fold(){
     else if(e.k==='pa'){ pool.push({id:e.id,text:e.tx,target:e.tg,by:e.w}); }
     else if(e.k==='pd'){ del[e.id]=1; }
     else if(e.k==='pn'){ pn[e.id]={id:e.id,who:e.w,no:e.no,text:e.tx,date:e.d,t:e.t}; }
-    else if(e.k==='pc'){ closed[e.id]=1; doneIds[e.id]=1; }
-    else if(e.k==='pk'){ closed[e.id]=1; }
+    else if(e.k==='pc'){ st[e.id]='done'; }
+    else if(e.k==='pu'){ st[e.id]='open'; }
+    else if(e.k==='pk'){ st[e.id]='cancel'; }
     else if(e.k==='f'){ fav[e.r]=!!e.v; }
     else if(e.k==='rt'){ rate[e.r]=!!e.v; }
   });
-  var pending=[], doneN={momoka:0,rio:0}, id;
-  for(id in pn){ if(!closed[id]) pending.push(pn[id]); }
-  pending.sort(function(a,b){ return (a.t||0)-(b.t||0); });
-  for(id in doneIds){ if(pn[id]) doneN[pn[id].who]=(doneN[pn[id].who]||0)+1; }
+  var pending=[], doneList=[], doneN={momoka:0,rio:0}, id;
+  for(id in pn){
+    if(st[id]==='cancel') continue;
+    if(st[id]==='done'){ doneList.push(pn[id]); doneN[pn[id].who]=(doneN[pn[id].who]||0)+1; }
+    else pending.push(pn[id]);
+  }
+  function byT(a,b){ return (b.t||0)-(a.t||0); }
+  pending.sort(byT); doneList.sort(byT);
   S={days:days,pool:pool.filter(function(p){ return !del[p.id]; }),
-     pending:pending,fav:fav,rate:rate,doneN:doneN};
+     pending:pending,doneList:doneList,fav:fav,rate:rate,doneN:doneN};
 }
 function pad(n){ return String(n).padStart(2,'0'); }
 function ds(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
@@ -768,15 +784,24 @@ function vList(){
      '<div class="stat"><div class="n" style="color:var(--grn)">'+streak(me)+'</div><div class="l">連続<br>予定送信</div></div>'+
      '</div></div>';
 
-  h+='<div class="sect"><h2>ダウンロード済み（未実行）</h2>';
-  if(ps.length){
-    ps.forEach(function(p,i){
-      h+='<div class="prow" style="animation-delay:'+(i*.05)+'s"><div class="ix">'+esc(p.no||(i+1))+'</div>'+
-        '<div class="in"><div class="t">'+esc(p.text)+'</div><div class="s">'+esc(p.date)+' 確定 ・ '+esc(NAME[p.who]||'')+'</div></div>'+
-        '<button class="ck" data-act="done" data-id="'+esc(p.id)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg></button></div>';
-    });
+  var mine=S.pending.filter(function(p){ return p.who===me; });
+  var mdone=S.doneList.filter(function(p){ return p.who===me; });
+  function penRow(p,done){
+    return '<button class="pen'+(done?' ok':'')+'" data-act="toggle" data-id="'+esc(p.id)+'">'+
+      '<span class="px">'+esc(p.no||'･')+'</span>'+
+      '<span class="pin"><span class="pt">'+esc(p.text)+'</span>'+
+      '<span class="pm">'+esc(p.date)+' 確定'+(done?' ・ 実行しました':'')+'</span></span>'+
+      '<span class="pill '+(done?'p-ok':'p-ng')+'">'+(done?'実行済み':'まだ')+'</span></button>';
+  }
+  h+='<div class="sect"><h2>'+esc(NAME[me])+'さんに課された罰ゲーム</h2>';
+  if(mine.length||mdone.length){
+    h+=mine.map(function(p){ return penRow(p,false); }).join('');
+    h+=mdone.map(function(p){ return penRow(p,true); }).join('');
+    h+='<div style="padding:11px 16px 0;color:#808080;font-size:10.5px">'+
+       'タップすると「まだ」と「実行済み」を切り替えられます。</div>';
   }else{
-    h+='<div style="padding:22px 16px;color:#808080;font-size:12px">未実行の罰ゲームはありません。掟を破ると、ここに自動で1件たまります。</div>';
+    h+='<div style="padding:22px 16px;color:#808080;font-size:12px">'+
+       '課された罰ゲームはありません。掟を破ると、ここに自動で1件たまります。</div>';
   }
   h+='</div>';
 
@@ -790,18 +815,7 @@ function vList(){
      '<button class="bigbtn b-red" data-act="add" style="margin:0">'+
      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>追加する</button>'+
      '<div style="font-size:10.5px;color:#808080;margin-top:10px;line-height:1.6">'+
-     'ここに書いたものが、相手が違反したときの抽選に入ります。</div></div></div>';
-
-  h+='<div class="sect"><h2>罰ゲーム一覧（'+S.pool.length+'件）</h2>';
-  S.pool.forEach(function(x,i){
-    h+='<div class="prow" style="animation-delay:'+(i*.03)+'s"><div class="ix">'+(i+1)+'</div>'+
-      '<div class="in"><div class="t">'+esc(x.text)+'</div><div class="s">'+
-      '<span class="chip'+(TG[x.target]&&x.target!=='both'?' t-'+esc(x.target):'')+'">'+(x.target==='both'?'両方':esc(NAME[x.target]||'?')+'に')+'</span>'+
-      (x.by?' ・ '+esc(NAME[x.by]||'?')+'が追加':' ・ 最初から')+'</div></div>'+
-      '<button class="del" data-act="delpen" data-id="'+esc(x.id)+'" aria-label="削除">'
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
-  });
-  h+='</div>';
+     'ここに書いたものが、相手が違反したときの抽選に入ります。（現在 '+S.pool.length+' 件）</div></div></div>';
 
   var favs=RULES.filter(function(r){ return S.fav[r.id]; });
   h+='<div class="sect"><h2>マイリスト</h2>';
@@ -865,8 +879,7 @@ function vDetail(id){
 
   h+='<div class="tabs">'+
      '<button data-act="dtab" data-t="epi" aria-selected="'+(dTab==='epi')+'">記録</button>'+
-     '<button data-act="dtab" data-t="more" aria-selected="'+(dTab==='more')+'">関連の掟</button>'+
-     '<button data-act="dtab" data-t="pen" aria-selected="'+(dTab==='pen')+'">罰ゲーム一覧</button></div><div>';
+     '<button data-act="dtab" data-t="more" aria-selected="'+(dTab==='more')+'">関連の掟</button></div><div>';
 
   if(dTab==='epi'){
     var now=new Date();
@@ -1030,6 +1043,11 @@ document.addEventListener('click',function(ev){
   if(a==='done'){
     addEv({k:'pc',id:el.getAttribute('data-id')});
     blip(880); buzz(); render(); return; }
+  if(a==='toggle'){
+    var tid=el.getAttribute('data-id');
+    var isDone=S.doneList.some(function(p){ return p.id===tid; });
+    addEv({k:isDone?'pu':'pc',id:tid});
+    blip(isDone?360:880); buzz(); render(); return; }
 
   if(a==='tg'){
     newTarget=el.getAttribute('data-t');
