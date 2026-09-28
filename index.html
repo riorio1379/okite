@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>二人の掟</title>
 <meta name="theme-color" content="#000000">
-<meta name="app-build" content="20260928-195918">
+<meta name="app-build" content="20260928-200223">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="description" content="桃香と理央の掟。">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -933,7 +933,7 @@ function render(){
     return; }
   gateEl.hidden=true; appEl.hidden=false; tabbarEl.hidden=false;
   document.getElementById('navTitle').textContent =
-    tab==='home' ? NAME[me]+'さんへ' : (tab==='cal'?'カレンダー':'マイリスト');
+    tab==='home' ? NAME[me] : (tab==='cal'?'カレンダー':'マイリスト');
   screenEl.innerHTML = tab==='home'?vHome() : tab==='cal'?vCal() : vList();
   Array.prototype.forEach.call(document.querySelectorAll('.tb'),function(b){
     b.setAttribute('aria-current', b.getAttribute('data-tab')===tab?'true':'false'); });
@@ -1073,7 +1073,7 @@ document.addEventListener('click',function(ev){
 },false);
 
 /* ---- 新しい版が出ていたら、自動で入れ替わる ---- */
-var BUILD='20260928-195918';
+var BUILD='20260928-200223';
 setTimeout(function(){
   try{
     if(sessionStorage.getItem('okite-reloaded')) return;
@@ -1088,6 +1088,9 @@ setTimeout(function(){
     }).catch(function(){});
   }catch(e){}
 },1200);
+
+/* 自動更新で付いた ?v= は、読み込んだら消してURLを元に戻す */
+try{ if(location.search) history.replaceState(null,'',location.pathname); }catch(e){}
 
 unionEv(SEED); fold(); saveLocal();
 render(); paintSync(); pull();
