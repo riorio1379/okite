@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>二人の掟</title>
+<meta name="theme-color" content="#000000">
+<meta name="description" content="桃香と理央の掟。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="二人の掟">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 44'%3E%3Cpath d='M0 0h6.4l11.2 31.4V0H24v44h-6.4L6.4 12.6V44H0z' fill='%23E50914'/%3E%3C/svg%3E">
+<style>html,body{margin:0;background:#000}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+<style>
+  :root{
+    --nf:#E50914; --nf-dark:#B20710;
+    --bk:#000000; --card:#141414; --card2:#1F1F1F;
+    --wh:#FFFFFF; --g1:#E5E5E5; --g2:#B3B3B3; --g3:#808080; --g4:#404040;
+    --grn:#46D369;
+    --f:"Noto Sans JP","Hiragino Sans",sans-serif;
+    --tabh:58px;
+    --ease:cubic-bezier(.2,.8,.2,1);
+  }
+  *{box-sizing:border-box}
+  html{background:#000000}
+  body{
+    background:var(--bk);color:var(--wh);font-family:var(--f);font-weight:500;
+    font-size:13px;line-height:1.6;margin:0;
+    -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+    -webkit-text-size-adjust:100%;
+  }
+  button{font-family:var(--f);color:inherit;background:none;border:0;padding:0;cursor:pointer;
+    touch-action:manipulation;transition:transform .12s var(--ease),opacity .12s}
+  .tnum{font-variant-numeric:tabular-nums}
+  [hidden]{display:none!important}
+
+  /* ===================== モーション ===================== */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes sheetUp{from{transform:translateY(100%);opacity:.4}to{transform:none;opacity:1}}
+  @keyframes popIn{0%{transform:scale(.55);opacity:0}62%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+  @keyframes logoIn{0%{transform:scale(1.5);opacity:0;letter-spacing:.24em}
+    55%{opacity:1}100%{transform:scale(1);opacity:1;letter-spacing:-.03em}}
+  @keyframes railIn{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+  @keyframes shake{0%,100%{transform:translateX(0)}18%{transform:translateX(-7px)}
+    38%{transform:translateX(6px)}58%{transform:translateX(-4px)}78%{transform:translateX(3px)}}
+  @keyframes redflash{0%{box-shadow:0 0 0 0 rgba(229,9,20,.85)}100%{box-shadow:0 0 0 26px rgba(229,9,20,0)}}
+  @keyframes sweep{from{background-position:-160% 0}to{background-position:260% 0}}
+  @keyframes barGrow{from{width:0}}
+
+  #screen>.sect{animation:fadeUp .46s var(--ease) both}
+  #screen>.sect:nth-child(1){animation-delay:.02s}
+  #screen>.sect:nth-child(2){animation-delay:.08s}
+  #screen>.sect:nth-child(3){animation-delay:.14s}
+  #screen>.sect:nth-child(4){animation-delay:.20s}
+  #screen>.sect:nth-child(5){animation-delay:.26s}
+  .rail>*{animation:railIn .44s var(--ease) both}
+  .rail>*:nth-child(1){animation-delay:.04s}
+  .rail>*:nth-child(2){animation-delay:.10s}
+  .rail>*:nth-child(3){animation-delay:.16s}
+  .rail>*:nth-child(4){animation-delay:.22s}
+  .rail>*:nth-child(5){animation-delay:.28s}
+  #detail.open{animation:sheetUp .36s var(--ease) both}
+  #detail .d-body{animation:fadeIn .5s .14s both}
+  #detail .hero{animation:fadeIn .5s both}
+  .poster:active,.top3:active,.wide:active{transform:scale(.945)}
+  .prof:active{transform:scale(.94)}
+  .bigbtn:active{transform:scale(.985)}
+  .tb:active svg{transform:scale(.86)}
+  .epi{transition:background .15s}
+  .epi:active{background:#0E0E0E}
+
+  /* ===================== プロフィール選択 ===================== */
+  #gate{position:fixed;inset:0;background:var(--bk);z-index:60;overflow-y:auto;display:flex;flex-direction:column}
+  .gate-art{position:relative;height:44vh;min-height:270px;flex:none;overflow:hidden}
+  .gate-art .veil{position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.55) 60%,#000 100%)}
+  .gate-logo{position:absolute;left:0;right:0;bottom:24px;text-align:center;
+    animation:logoIn 1.15s var(--ease) both}
+  .gate-logo .t1{font-weight:900;font-size:41px;letter-spacing:-.03em;line-height:1}
+  .gate-logo .t2{color:var(--nf);font-style:italic}
+  .gate-fill{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:6vh;
+    animation:fadeUp .6s .5s both}
+  .gate-sub{text-align:center;color:var(--g2);font-size:13px;margin:0 0 22px}
+  .profiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 26px;
+    padding:0 46px 40px;max-width:420px;margin:0 auto;width:100%}
+  .prof{display:flex;flex-direction:column;align-items:center;gap:9px}
+  .prof .av{width:88px;height:88px;border-radius:8px;display:grid;place-content:center;overflow:hidden}
+  .prof .nm{font-size:12.5px;color:var(--g2)}
+  .av-momoka{background:linear-gradient(145deg,#FF2D87,#C4006B)}
+  .av-rio{background:linear-gradient(145deg,#3AA0FF,#0B4FBF)}
+  .av-add,.av-edit{background:var(--card2);border:1px solid #2E2E2E}
+  .av svg{width:46px;height:46px}
+
+  /* ===================== 共通 ===================== */
+  #app{padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 8px)}
+  .nav{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,#000 30%,rgba(0,0,0,.72) 100%);
+    backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:12px 16px 10px}
+  .nav h1{font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em}
+  .nav-ic{display:flex;gap:18px;align-items:center}
+  .nav-ic svg{width:22px;height:22px;display:block}
+  .nlogo{width:19px;height:34px;flex:none}
+  .sect{margin-top:22px}
+  .sect h2{font-size:15.5px;font-weight:700;margin:0 0 9px;padding-inline:16px;letter-spacing:-.01em}
+  .rail{display:flex;gap:8px;overflow-x:auto;padding:0 16px 3px;scrollbar-width:none;
+    scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+  .rail::-webkit-scrollbar{display:none}
+  .rail>*{flex:none;scroll-snap-align:start}
+
+  /* ===================== アート ===================== */
+  .art{position:relative;overflow:hidden;border-radius:4px;display:block;width:100%;height:100%}
+  .art .mo{position:absolute;inset:0;width:100%;height:100%}
+  .art .cap{position:absolute;left:8px;right:8px;bottom:9px}
+  .art .cap .ct{font-weight:900;font-size:15px;line-height:1.12;letter-spacing:-.02em;
+    text-shadow:0 2px 10px rgba(0,0,0,.65)}
+  .art .cap .cs{font-size:8.5px;color:var(--g2);letter-spacing:.16em;margin-top:4px;font-weight:700}
+  .a-reply{background:radial-gradient(118% 88% at 70% 18%,#8C0D18 0%,#38040A 52%,#080002 100%)}
+  .a-plan{background:radial-gradient(120% 92% at 50% 88%,#FF9500 0%,#7A2E00 46%,#0B0603 100%)}
+  .a-eye{background:radial-gradient(118% 88% at 50% 32%,#4436A8 0%,#171041 54%,#04030E 100%)}
+  .poster{width:108px;aspect-ratio:2/3;border-radius:4px;overflow:hidden;position:relative}
+  .poster .badge{position:absolute;top:0;left:0;background:var(--nf);font-size:8px;font-weight:700;
+    padding:2px 5px;letter-spacing:.06em;border-radius:0 0 3px 0}
+  .top3{display:flex;align-items:flex-end;padding-left:2px}
+  .rank{font-weight:900;font-size:96px;line-height:.78;color:#0D0D0D;
+    -webkit-text-stroke:2px #5A5A5A;letter-spacing:-.06em;margin-right:-8px}
+  .top3 .poster{width:100px}
+  .wide{width:232px;display:flex;flex-direction:column;text-align:left}
+  .wide .th{aspect-ratio:16/9;border-radius:4px;overflow:hidden;position:relative}
+  .wide .pl{position:absolute;inset:0;display:grid;place-content:center}
+  .wide .pl span{width:38px;height:38px;border-radius:50%;border:2px solid rgba(255,255,255,.9);
+    display:grid;place-content:center;background:rgba(0,0,0,.35)}
+  .wide .pl svg{width:15px;height:15px;margin-left:2px}
+  .prog{height:3px;background:#4a4a4a;margin-top:7px;border-radius:2px;overflow:hidden}
+  .prog i{display:block;height:100%;background:var(--nf)}
+  .wide .tt{font-size:11.5px;margin-top:6px;color:var(--g1);line-height:1.4;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .wide .mt{font-size:10.5px;color:var(--g3);margin-top:2px}
+
+  /* ===================== 詳細 ===================== */
+  #detail{position:fixed;inset:0;background:var(--bk);z-index:50;overflow-y:auto;
+    padding-bottom:calc(var(--tabh) + 30px)}
+  .hero{position:relative;aspect-ratio:1/1;max-height:60vh}
+  .hero .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 34%,rgba(0,0,0,.85) 88%,#000 100%)}
+  .hero .x{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;
+    background:rgba(20,20,20,.72);display:grid;place-content:center}
+  .hero .x svg{width:15px;height:15px}
+  .hero .mute{position:absolute;right:14px;bottom:14px;width:30px;height:30px;border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.55);display:grid;place-content:center}
+  .hero .mute svg{width:14px;height:14px}
+  .d-body{padding:14px 16px 0;margin-top:-6px}
+  .d-eyebrow{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+  .d-eyebrow .w{font-size:10.5px;letter-spacing:.42em;color:var(--g1);font-weight:700}
+  .d-title{font-size:26px;font-weight:900;letter-spacing:-.025em;line-height:1.16;margin:0 0 9px}
+  .d-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11.5px;color:var(--g2);margin-bottom:14px}
+  .d-meta .mm{color:var(--grn);font-weight:700}
+  .tagbox{border:1px solid var(--g4);color:var(--g1);font-size:9.5px;padding:0 4px;border-radius:2px;font-weight:700}
+  .tagfill{background:var(--g4);color:var(--g1);font-size:9.5px;padding:0 4px;border-radius:2px;font-weight:700}
+  .bigbtn{width:100%;min-height:46px;border-radius:4px;font-weight:700;font-size:15px;
+    display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:9px}
+  .bigbtn svg{width:19px;height:19px}
+  .b-play{background:var(--wh);color:#000}
+  .b-sub{background:#2A2A2A;color:var(--wh)}
+  .b-red{background:var(--nf);color:#fff}
+  .b-red.pulse{animation:redflash .6s ease-out}
+  .timeline{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+  .timeline .bar{flex:1;height:3px;background:#4a4a4a;border-radius:2px;overflow:hidden}
+  .timeline .bar i{display:block;height:100%;background:var(--nf);animation:barGrow .6s var(--ease)}
+  .timeline .lb{font-size:10.5px;color:var(--g2);white-space:nowrap}
+  .d-sub{font-size:13.5px;line-height:1.62;color:var(--g1);margin:0 0 12px}
+  .d-credit{font-size:11.5px;color:var(--g3);line-height:1.7;margin-bottom:4px}
+  .d-credit b{color:var(--g1);font-weight:500}
+  .acts{display:flex;gap:34px;padding:16px 4px 18px}
+  .act{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10.5px;color:var(--g1)}
+  .act svg{width:23px;height:23px}
+  .act.on svg{color:var(--nf)}
+  .tabs{display:flex;gap:20px;border-top:1px solid #222;padding-top:2px;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{font-size:13.5px;font-weight:700;color:var(--g3);padding:13px 0 11px;position:relative;white-space:nowrap}
+  .tabs button[aria-selected="true"]{color:var(--wh)}
+  .tabs button[aria-selected="true"]::before{content:"";position:absolute;top:-1px;left:0;right:0;height:3px;background:var(--nf)}
+  .epi{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid #191919;align-items:flex-start;width:100%;text-align:left}
+  .epi .th{width:108px;aspect-ratio:16/9;border-radius:3px;overflow:hidden;flex:none;position:relative}
+  .epi .th .ov{position:absolute;inset:0;background:rgba(0,0,0,.32)}
+  .epi .th .dn{position:absolute;inset:0;display:grid;place-content:center;font-weight:900;
+    font-size:22px;color:rgba(255,255,255,.94);text-shadow:0 2px 12px rgba(0,0,0,.8)}
+  .epi .in{flex:1;min-width:0}
+  .epi .h{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700}
+  .epi .h .du{color:var(--g3);font-weight:500;font-size:11px;flex:none}
+  .epi .d{font-size:11.5px;color:var(--g3);line-height:1.5;margin-top:3px}
+  .epi .st{display:inline-flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+  .pill{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:99px}
+  .p-ok{background:rgba(70,211,105,.15);color:var(--grn)}
+  .p-ng{background:rgba(229,9,20,.18);color:#FF6470}
+  .p-na{background:#1E1E1E;color:var(--g3)}
+
+  /* 罰ゲーム抽選（違反時に自動で出る） */
+  .reveal{background:var(--card);border-radius:8px;padding:15px;margin:2px 0 14px;
+    border:1px solid #241014;animation:popIn .4s var(--ease) both}
+  .reveal .cnt{font-size:9.5px;letter-spacing:.24em;color:var(--nf);font-weight:700;margin-bottom:8px}
+  .reveal .tx{font-size:15px;font-weight:900;line-height:1.5;min-height:46px;display:flex;align-items:center}
+  .reveal .tx.spin{color:var(--g3);
+    background:linear-gradient(90deg,#555 20%,#fff 50%,#555 80%);background-size:220% 100%;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:sweep .7s linear infinite}
+  .reveal .ft{font-size:10.5px;color:var(--g3);margin-top:8px}
+
+  /* ===================== カレンダー ===================== */
+  .cal-head{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 12px}
+  .cal-head .m{font-size:17px;font-weight:900}
+  .navb{width:34px;height:34px;border-radius:50%;background:var(--card2);display:grid;place-content:center}
+  .navb svg{width:14px;height:14px}
+  .navb[disabled]{opacity:.28}
+  .g7{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;padding-inline:16px}
+  .dow{font-size:9.5px;color:var(--g3);text-align:center;font-weight:700;padding-bottom:4px}
+  .dow.s{color:#FF6470}
+  .day{aspect-ratio:1;border-radius:4px;background:#121212;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:700;color:var(--g1);
+    border:1.5px solid transparent}
+  .day.void{background:transparent;pointer-events:none}
+  .day.fut{opacity:.3;pointer-events:none}
+  .day.today{border-color:var(--nf)}
+  .day.sel{background:var(--wh);color:#000}
+  .day .mk{display:flex;gap:3px;height:5px;align-items:center}
+  .day .mk i{width:5px;height:5px;border-radius:50%;display:block}
+  .mk .g{background:var(--grn)} .mk .r{background:var(--nf)}
+  .day.sel .mk .g{background:#0A8C31}
+  .edit{margin:18px 16px 0;background:var(--card);border-radius:8px;padding:14px 14px 6px;
+    animation:fadeUp .36s var(--ease) both}
+  .edit h3{font-size:14px;font-weight:900;margin:0 0 10px}
+  .erow{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:9px 0;border-bottom:1px solid #202020;font-size:12.5px}
+  .erow:last-child{border-bottom:0}
+  .erow .lb{color:var(--g1);min-width:0}
+  .erow .lb i{display:block;font-style:normal;font-size:10px;color:var(--g3);margin-top:1px}
+  .step{display:flex;align-items:center;gap:9px;flex:none}
+  .step button{width:30px;height:30px;border-radius:50%;background:var(--card2);font-weight:900;
+    font-size:15px;line-height:1;display:grid;place-content:center}
+  .step .v{font-weight:900;font-size:15px;min-width:16px;text-align:center}
+  .tg{border-radius:99px;padding:6px 14px;font-size:11.5px;font-weight:700;background:var(--card2);color:var(--g2);flex:none}
+  .tg[aria-pressed="true"]{background:var(--wh);color:#000}
+
+  /* ===================== マイリスト ===================== */
+  .prow{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #181818;
+    animation:fadeUp .4s var(--ease) both}
+  .prow .ix{width:46px;height:46px;border-radius:4px;background:var(--card2);display:grid;place-content:center;
+    flex:none;font-weight:900;font-size:17px;color:var(--nf)}
+  .prow .in{flex:1;min-width:0}
+  .prow .t{font-size:13px;font-weight:700;line-height:1.4}
+  .prow .s{font-size:10.5px;color:var(--g3);margin-top:2px}
+  .prow .ck{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--g3);display:grid;place-content:center;flex:none}
+  .prow .ck svg{width:15px;height:15px}
+  .prow .ck:active{background:var(--wh);color:#000}
+  .addbox{margin:0 16px;background:var(--card);border-radius:8px;padding:14px}
+  .addbox input{width:100%;background:#1F1F1F;border:1px solid #2E2E2E;border-radius:4px;color:#fff;
+    font-size:16px;font-family:var(--f);font-weight:500;padding:12px;outline:none;-webkit-appearance:none}
+  .addbox input:focus{border-color:var(--g3)}
+  .addbox input::placeholder{color:#6A6A6A}
+  .seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+  .seg3 button{background:#1F1F1F;border-radius:4px;padding:10px 0;font-size:12px;font-weight:700;color:var(--g3)}
+  .seg3 button[aria-pressed="true"]{background:var(--wh);color:#000}
+  .chip{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:99px;background:#232323;color:var(--g2)}
+  .chip.t-momoka{background:rgba(255,45,135,.2);color:#FF7FB5}
+  .chip.t-rio{background:rgba(58,160,255,.2);color:#7FC2FF}
+  .del{width:30px;height:30px;border-radius:50%;background:#1F1F1F;display:grid;place-content:center;flex:none}
+  .del svg{width:12px;height:12px;color:var(--g3)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px}
+  .stat{background:var(--card);border-radius:6px;padding:12px 10px;text-align:center}
+  .stat .n{font-size:24px;font-weight:900;line-height:1}
+  .stat .l{font-size:9.5px;color:var(--g3);margin-top:5px;line-height:1.35}
+  .lnk{display:flex;align-items:center;justify-content:space-between;padding:15px 16px;
+    border-top:1px solid #181818;font-size:13px;color:var(--g1);width:100%;text-align:left}
+  .lnk svg{width:14px;height:14px;color:var(--g3)}
+
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(0,0,0,.94);
+    border-top:1px solid #141414;display:grid;grid-template-columns:repeat(3,1fr);
+    height:calc(var(--tabh) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
+  .tb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    font-size:9.5px;color:var(--g3);font-weight:500}
+  .tb svg{width:21px;height:21px;transition:transform .12s var(--ease)}
+  .tb[aria-current="true"]{color:var(--wh);font-weight:700}
+  .syncbar{display:flex;align-items:center;gap:7px;margin:0 16px;padding:7px 11px;border-radius:99px;
+    font-size:10.5px;font-weight:700;color:var(--g3);background:#101010;border:1px solid #1E1E1E}
+  .syncbar i{width:7px;height:7px;border-radius:50%;background:var(--g3);flex:none}
+  .syncbar.ok{color:var(--grn);border-color:rgba(70,211,105,.3)}
+  .syncbar.ok i{background:var(--grn);animation:pulse 1.8s ease-in-out infinite}
+  .syncbar.ng{color:#FF6470;border-color:rgba(229,9,20,.3)}
+  .syncbar.ng i{background:#FF6470}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .foot{color:var(--g4);font-size:10.5px;line-height:1.7;text-align:center;padding:28px 24px 8px}
+  @media (max-width:340px){ .poster{width:96px} .top3 .poster{width:90px} .rank{font-size:84px} }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div id="gate">
+  <div class="gate-art" id="gateArt"></div>
+  <div class="gate-fill">
+    <div class="gate-sub">プロフィールを選択</div>
+    <div class="profiles">
+      <button class="prof" data-act="pick" data-who="momoka">
+        <span class="av av-momoka"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><circle cx="17" cy="19" r="2.4" fill="#fff" stroke="none"/><circle cx="31" cy="19" r="2.4" fill="#fff" stroke="none"/><path d="M16 30c2.6 3 5.2 4.4 8 4.4S29.4 33 32 30"/></svg></span>
+        <span class="nm">桃香</span></button>
+      <button class="prof" data-act="pick" data-who="rio">
+        <span class="av av-rio"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><circle cx="17" cy="19" r="2.4" fill="#fff" stroke="none"/><circle cx="31" cy="19" r="2.4" fill="#fff" stroke="none"/><path d="M16 31h16"/></svg></span>
+        <span class="nm">理央</span></button>
+      <button class="prof" data-act="pick" data-who="kids">
+        <span class="av av-add"><svg viewBox="0 0 48 48" fill="none" stroke="#B3B3B3" stroke-width="3" stroke-linecap="round"><path d="M24 14v20M14 24h20"/></svg></span>
+        <span class="nm">追加</span></button>
+      <button class="prof" data-act="reset">
+        <span class="av av-edit"><svg viewBox="0 0 48 48" fill="none" stroke="#B3B3B3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M31 12l5 5-17 17-6.5 1.5L14 29z"/></svg></span>
+        <span class="nm">全消去</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="app" hidden>
+  <div class="nav">
+    <svg class="nlogo" viewBox="0 0 24 44"><path d="M0 0h6.4l11.2 31.4V0H24v44h-6.4L6.4 12.6V44H0z" fill="#E50914"/></svg>
+    <h1 id="navTitle">ホーム</h1>
+    <div class="nav-ic">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0 4.5-4.5M12 16l-4.5-4.5M4 20h16"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+    </div>
+  </div>
+  <div class="syncbar" id="syncbar"><i></i>接続中…</div>
+  <div id="screen"></div>
+  <p class="foot">遊びです。辛くなったら、その掟は即廃止。<br>記録はこの端末の中だけ。外には出ません。</p>
+</div>
+
+<div id="detail" hidden></div>
+
+<div class="tabbar" id="tabbar" hidden>
+  <button class="tb" data-act="tab" data-tab="home" aria-current="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+    <span>ホーム</span></button>
+  <button class="tb" data-act="tab" data-tab="cal">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+    <span>カレンダー</span></button>
+  <button class="tb" data-act="tab" data-tab="list">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12.5l2.8 2.8L16 10"/></svg>
+    <span>マイリスト</span></button>
+</div>
+
+<script>
+(function(){
+/* ===================== 状態 ===================== */
+/* ===================== 共有エンジン（イベントログ＋同期） ===================== */
+var SB_URL='https://pargoxyoykxwvpsfbthc.supabase.co';
+var SB_KEY='sb_publishable_b6SAmkt_lz4SoYA1YZMfUA_o7PA0_GR';
+var ROOM='okite-momoka-rio-9f3c71';
+var LKEY='okite-ev-v1', LLOC='okite-loc-v1';
+var EV=[], SEEN={}, S={}, LOC={}, sync={on:null,busy:0,again:0,pt:null};
+try{ EV=JSON.parse(localStorage.getItem(LKEY))||[]; }catch(e){ EV=[]; }
+try{ LOC=JSON.parse(localStorage.getItem(LLOC))||{}; }catch(e){ LOC={}; }
+EV.forEach(function(e){ if(e&&e.i) SEEN[e.i]=1; });
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+function saveLocal(){ try{ localStorage.setItem(LKEY,JSON.stringify(EV));
+  localStorage.setItem(LLOC,JSON.stringify(LOC)); }catch(e){} }
+function save(){ saveLocal(); push(); }
+function unionEv(list){ var ch=0;
+  for(var i=0;i<(list||[]).length;i++){ var e=list[i];
+    if(e&&e.i&&!SEEN[e.i]){ SEEN[e.i]=1; EV.push(e); ch=1; } }
+  return ch; }
+function addEv(e){ e.i=e.i||uid(); e.t=e.t||Date.now();
+  if(SEEN[e.i]) return e; SEEN[e.i]=1; EV.push(e); fold(); saveLocal(); push(); return e; }
+
+function fold(){
+  EV.sort(function(a,b){ return (a.t||0)-(b.t||0); });
+  var cut=0; EV.forEach(function(e){ if(e.k==='zz'&&e.t>cut) cut=e.t; });
+  var days={}, pool=[], del={}, pn={}, closed={}, doneIds={}, fav={}, rate={};
+  DEF.forEach(function(t,i){ pool.push({id:'d'+i,text:t,target:'both',by:null}); });
+  function D(k){ if(!days[k]) days[k]={v:{momoka:{},rio:{}},sent:{}}; return days[k]; }
+  EV.forEach(function(e){
+    if(e.t<cut||e.k==='zz') return;
+    if(e.k==='v'){ var o=D(e.d).v[e.w]; o[e.r]=(o[e.r]||0)+1; }
+    else if(e.k==='v-'){ var o2=D(e.d).v[e.w]; o2[e.r]=Math.max(0,(o2[e.r]||0)-1); }
+    else if(e.k==='s'){ D(e.d).sent[e.w]=!!e.v; }
+    else if(e.k==='pa'){ pool.push({id:e.id,text:e.tx,target:e.tg,by:e.w}); }
+    else if(e.k==='pd'){ del[e.id]=1; }
+    else if(e.k==='pn'){ pn[e.id]={id:e.id,who:e.w,no:e.no,text:e.tx,date:e.d,t:e.t}; }
+    else if(e.k==='pc'){ closed[e.id]=1; doneIds[e.id]=1; }
+    else if(e.k==='pk'){ closed[e.id]=1; }
+    else if(e.k==='f'){ fav[e.r]=!!e.v; }
+    else if(e.k==='rt'){ rate[e.r]=!!e.v; }
+  });
+  var pending=[], doneN={momoka:0,rio:0}, id;
+  for(id in pn){ if(!closed[id]) pending.push(pn[id]); }
+  pending.sort(function(a,b){ return (a.t||0)-(b.t||0); });
+  for(id in doneIds){ if(pn[id]) doneN[pn[id].who]=(doneN[pn[id].who]||0)+1; }
+  S={days:days,pool:pool.filter(function(p){ return !del[p.id]; }),
+     pending:pending,fav:fav,rate:rate,doneN:doneN};
+}
+function pad(n){ return String(n).padStart(2,'0'); }
+function ds(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function today(){ return ds(new Date()); }
+function vio(k,who,rid){ var r=S.days[k]; return (r&&r.v&&r.v[who]&&r.v[who][rid])||0; }
+function sent(k,who){ var r=S.days[k]; return !!(r&&r.sent&&r.sent[who]); }
+
+/* ---- Supabase 同期（ライブラリなし・3秒ごと） ---- */
+function H(x){ var h={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
+  for(var k in (x||{})) h[k]=x[k]; return h; }
+function paintSync(){
+  var el=document.getElementById('syncbar'); if(!el) return;
+  if(sync.on===true){ el.className='syncbar ok'; el.innerHTML='<i></i>二人で同期中'; }
+  else if(sync.on===false){ el.className='syncbar ng'; el.innerHTML='<i></i>つながっていません ─ この端末に保存中'; }
+  else { el.className='syncbar'; el.innerHTML='<i></i>接続中…'; }
+}
+function pull(){
+  if(typeof fetch!=='function') return;
+  fetch(SB_URL+'/rest/v1/okite_state?id=eq.'+ROOM+'&select=data',{headers:H(),cache:'no-store'})
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(function(j){
+    sync.on=true;
+    var row=j&&j[0], rev=(row&&row.data&&row.data.ev)||null;
+    if(rev){ var before=EV.length;
+      if(unionEv(rev)){ fold(); saveLocal(); render(); }
+      if(rev.length<EV.length||before!==EV.length) push();
+    } else { push(); }
+    paintSync();
+  })
+  .catch(function(){ sync.on=false; paintSync(); });
+}
+function push(){
+  if(sync.pt) return;
+  sync.pt=setTimeout(function(){ sync.pt=null; doPush(); },500);
+}
+function doPush(){
+  if(typeof fetch!=='function') return;
+  if(sync.busy){ sync.again=1; return; }
+  sync.busy=1;
+  fetch(SB_URL+'/rest/v1/okite_state',{method:'POST',
+    headers:H({'Prefer':'resolution=merge-duplicates,return=minimal'}),
+    body:JSON.stringify([{id:ROOM,data:{ev:EV},updated_at:new Date().toISOString()}])})
+  .then(function(r){ sync.on=!!r.ok; })
+  .catch(function(){ sync.on=false; })
+  .then(function(){ sync.busy=0; paintSync();
+    if(sync.again){ sync.again=0; doPush(); } });
+}
+
+var NAME={momoka:'桃香',rio:'理央'};
+var WEEK=['日','月','火','水','木','金','土'];
+var DEF=['次の通話で相手の話を10分黙って聞く','アイスを1本おごる（相手が指定）',
+ '現在地の写真を30秒以内に送る','相手の好きな所を3つ送る','既読スルー1回券を進呈',
+ '明日の朝の予定を全部ひらがなで送る','相手が指定したスタンプを24時間使用','自撮りを1枚送る（加工禁止）'];
+function poolFor(who){
+  var a=S.pool.filter(function(p){ return p.target==='both'||p.target===who; });
+  if(!a.length) a=S.pool.slice();
+  if(!a.length) a=DEF.map(function(t,i){ return {id:'f'+i,text:t,target:'both',by:null}; });
+  return a;
+}
+function esc(x){ return String(x).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+/* ---- 旧ページ（Artifact版）から引き継ぐ既知の記録 ---- */
+var SEED=[
+ {i:'seed-v1',t:Date.UTC(2026,8,27,12,0,0),k:'v',w:'rio',d:'2026-09-27',r:'reply'},
+ {i:'seed-p1',t:Date.UTC(2026,8,27,12,0,1),k:'pn',w:'rio',id:'seedpen1',
+  tx:'相手の好きな所を3つ送る',no:4,d:'9/27'}
+];
+
+/* ===================== 掟 ===================== */
+var RULES=[
+ {id:'reply',no:'第1条',t:'1時間で返す',art:'a-reply',cap:'1時間で<br>返す',
+  sy:'相手から届いたら、1時間以内に返信する。起きてから深夜0時までが有効で、寝ている間は違反にならない。返せなかったら、下の「違反」を自分で1回押す。',
+  cnt:true},
+ {id:'plan',no:'第2条',t:'朝、予定を送る',art:'a-plan',cap:'朝、予定を<br>送る',
+  sy:'朝いちばんに、その日の予定を相手へ送る。授業でもバイトでも、ひとりの時間でもいい。「今日は何もない」もまた、立派な予定の開示である。',
+  cnt:false},
+ {id:'eye',no:'第3条',t:'異性と目を合わせない',art:'a-eye',cap:'異性と目を<br>合わせない',
+  sy:'眼球の可動域は、相手に留保されているものとする。店員・教員・親族との事務的な視線の交錯は違反としない。申告した誠実さは、罰則を軽くしない。',
+  cnt:true}
+];
+function R(id){ for(var i=0;i<RULES.length;i++) if(RULES[i].id===id) return RULES[i]; }
+
+var UID=0;
+function grain(u,f,o){ return '<filter id="gr'+u+'"><feTurbulence type="fractalNoise" baseFrequency="'+f+'" numOctaves="3" stitchTiles="stitch"/>'+
+  '<feColorMatrix type="saturate" values="0"/></filter>'+
+  '<rect width="100" height="150" filter="url(#gr'+u+')" opacity="'+o+'" style="mix-blend-mode:overlay"/>'; }
+function vign(u){ return '<radialGradient id="vg'+u+'" cx="50%" cy="46%" r="72%">'+
+  '<stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".82"/></radialGradient>'; }
+
+/* ── 第1条：深夜のトーク画面が、時計の文字盤になっている ── */
+function artReply(u){
+  var t='';
+  for(var i=0;i<60;i++){
+    var big=(i%5===0), a=i*6*Math.PI/180, r1=big?28.5:30.6, r2=33.4;
+    t+='<line x1="'+(50+Math.sin(a)*r1).toFixed(2)+'" y1="'+(60-Math.cos(a)*r1).toFixed(2)+
+       '" x2="'+(50+Math.sin(a)*r2).toFixed(2)+'" y2="'+(60-Math.cos(a)*r2).toFixed(2)+
+       '" stroke="#FF5A66" stroke-width="'+(big?1.1:.5)+'" opacity="'+(big?.75:.3)+'"/>';
+  }
+  return '<svg class="mo" viewBox="0 0 100 150" preserveAspectRatio="xMidYMid slice">'+
+   '<defs><radialGradient id="bg'+u+'" cx="62%" cy="26%" r="86%">'+
+     '<stop offset="0%" stop-color="#A2101D"/><stop offset="42%" stop-color="#4A0710"/>'+
+     '<stop offset="100%" stop-color="#050001"/></radialGradient>'+
+     '<linearGradient id="bm'+u+'" x1="0" y1="0" x2="1" y2="1">'+
+     '<stop offset="0%" stop-color="#fff" stop-opacity=".16"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>'+
+     '<filter id="gl'+u+'"><feGaussianBlur stdDeviation="2.4"/></filter>'+vign(u)+'</defs>'+
+   '<rect width="100" height="150" fill="url(#bg'+u+')"/>'+
+   '<polygon points="-10,0 34,0 4,150 -30,150" fill="url(#bm'+u+')"/>'+
+   '<circle cx="50" cy="60" r="38" fill="none" stroke="#E50914" stroke-width=".7" opacity=".35"/>'+
+   '<circle cx="50" cy="60" r="33" fill="#12000399" stroke="#FF3B4A" stroke-width="1.5" opacity=".9"/>'+
+   t+
+   '<g filter="url(#gl'+u+')" opacity=".55"><line x1="50" y1="60" x2="72" y2="46" stroke="#FF2E3C" stroke-width="3"/></g>'+
+   '<line x1="50" y1="60" x2="72" y2="46" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>'+
+   '<line x1="50" y1="60" x2="50" y2="43" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".92"/>'+
+   '<circle cx="50" cy="60" r="2.2" fill="#fff"/>'+
+   '<g opacity=".95"><path d="M31 96h38a5 5 0 0 1 5 5v13a5 5 0 0 1-5 5H43l-8 7v-7h-4a5 5 0 0 1-5-5v-13a5 5 0 0 1 5-5z" fill="#0D0002" stroke="#FF5A66" stroke-width="1" opacity=".92"/>'+
+   '<circle cx="42" cy="107.5" r="2.1" fill="#FF6470"/><circle cx="50" cy="107.5" r="2.1" fill="#FF6470" opacity=".7"/>'+
+   '<circle cx="58" cy="107.5" r="2.1" fill="#FF6470" opacity=".4"/></g>'+
+   '<rect width="100" height="150" fill="url(#vg'+u+')"/>'+grain(u,'.9','.09')+'</svg>';
+}
+
+/* ── 第2条：窓の外の夜明け。スカイラインの上に太陽が昇る ── */
+function artPlan(u){
+  var ray='';
+  for(var i=0;i<16;i++){ var a=(i*22.5)*Math.PI/180;
+    ray+='<polygon points="50,100 '+(50+Math.cos(a)*46-1.6).toFixed(2)+','+(100+Math.sin(a)*46).toFixed(2)+
+      ' '+(50+Math.cos(a)*46+1.6).toFixed(2)+','+(100+Math.sin(a)*46).toFixed(2)+'" fill="#FFCE6B" opacity=".13"/>'; }
+  var sky='', hs=[9,15,6,20,11,26,8,17,7,22,12,5,18,9];
+  for(var j=0;j<hs.length;j++){ var w=100/hs.length;
+    sky+='<rect x="'+(j*w).toFixed(2)+'" y="'+(112-hs[j])+'" width="'+(w+.6).toFixed(2)+'" height="'+(hs[j]+40)+'" fill="#12060F"/>';
+    for(var q=0;q<3;q++){ if((j+q)%3===0) sky+='<rect x="'+(j*w+1.6).toFixed(2)+'" y="'+(112-hs[j]+3+q*5)+'" width="1.7" height="2.2" fill="#FFC96B" opacity=".55"/>'; }
+  }
+  return '<svg class="mo" viewBox="0 0 100 150" preserveAspectRatio="xMidYMid slice">'+
+   '<defs><linearGradient id="sk'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+     '<stop offset="0%" stop-color="#0A0B2E"/><stop offset="34%" stop-color="#4A1A4E"/>'+
+     '<stop offset="62%" stop-color="#C6462F"/><stop offset="82%" stop-color="#FF9A32"/>'+
+     '<stop offset="100%" stop-color="#FFD37A"/></linearGradient>'+
+     '<radialGradient id="su'+u+'" cx="50%" cy="50%" r="50%">'+
+     '<stop offset="0%" stop-color="#FFF6D2"/><stop offset="62%" stop-color="#FFC24A"/>'+
+     '<stop offset="100%" stop-color="#FF8A1E"/></radialGradient>'+
+     '<filter id="sg'+u+'"><feGaussianBlur stdDeviation="4.5"/></filter>'+vign(u)+'</defs>'+
+   '<rect width="100" height="150" fill="url(#sk'+u+')"/>'+
+   '<g opacity=".5"><circle cx="18" cy="22" r=".8" fill="#fff"/><circle cx="34" cy="13" r=".6" fill="#fff"/>'+
+   '<circle cx="72" cy="18" r=".7" fill="#fff"/><circle cx="86" cy="30" r=".5" fill="#fff"/>'+
+   '<circle cx="58" cy="9" r=".5" fill="#fff"/></g>'+
+   ray+
+   '<circle cx="50" cy="100" r="22" fill="#FFB43C" filter="url(#sg'+u+')" opacity=".85"/>'+
+   '<circle cx="50" cy="100" r="16" fill="url(#su'+u+')"/>'+
+   sky+
+   '<g opacity=".8"><path d="M20 44q3-3 6 0" fill="none" stroke="#1B0C22" stroke-width="1"/>'+
+   '<path d="M28 39q2.5-2.6 5 0" fill="none" stroke="#1B0C22" stroke-width=".9"/></g>'+
+   '<g><path d="M56 44h26a4 4 0 0 1 4 4v15a4 4 0 0 1-4 4H70l-7 6v-6h-7a4 4 0 0 1-4-4V48a4 4 0 0 1 4-4z" fill="#0C0618" opacity=".8" stroke="#FFD891" stroke-width=".9"/>'+
+   '<rect x="59" y="50" width="20" height="1.8" rx=".9" fill="#FFD891" opacity=".9"/>'+
+   '<rect x="59" y="55" width="14" height="1.8" rx=".9" fill="#FFD891" opacity=".65"/>'+
+   '<rect x="59" y="60" width="17" height="1.8" rx=".9" fill="#FFD891" opacity=".45"/></g>'+
+   '<rect width="100" height="150" fill="url(#vg'+u+')"/>'+grain(u,'.85','.08')+'</svg>';
+}
+
+/* ── 第3条：虹彩まで描き込んだ、近接した目 ── */
+function artEye(u){
+  var sp='';
+  for(var i=0;i<64;i++){ var a=i*5.625*Math.PI/180, r1=5.6, r2=13.4+(i%3)*.5;
+    sp+='<line x1="'+(50+Math.cos(a)*r1).toFixed(2)+'" y1="'+(62+Math.sin(a)*r1).toFixed(2)+
+      '" x2="'+(50+Math.cos(a)*r2).toFixed(2)+'" y2="'+(62+Math.sin(a)*r2).toFixed(2)+
+      '" stroke="#CFC2FF" stroke-width=".45" opacity="'+(i%2?.3:.14)+'"/>'; }
+  var lash='';
+  for(var j=0;j<11;j++){ var x=22+j*5.2, dy=-(7-Math.abs(j-5))*.9;
+    lash+='<path d="M'+x+' '+(62-Math.cos((j-5)/5*1.1)*13.6+2)+' q '+(j<5?-3:3)+' '+dy+' '+(j<5?-5.5:5.5)+' '+(dy*1.5-2)+
+      '" fill="none" stroke="#0B0618" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>'; }
+  return '<svg class="mo" viewBox="0 0 100 150" preserveAspectRatio="xMidYMid slice">'+
+   '<defs><linearGradient id="sn'+u+'" x1="0" y1="0" x2="0" y2="1">'+
+     '<stop offset="0%" stop-color="#2E2456"/><stop offset="42%" stop-color="#191140"/>'+
+     '<stop offset="100%" stop-color="#05030F"/></linearGradient>'+
+     '<radialGradient id="ir'+u+'" cx="42%" cy="38%" r="70%">'+
+     '<stop offset="0%" stop-color="#A897FF"/><stop offset="48%" stop-color="#5C47CE"/>'+
+     '<stop offset="88%" stop-color="#241879"/><stop offset="100%" stop-color="#120A3C"/></radialGradient>'+
+     '<radialGradient id="wh'+u+'" cx="50%" cy="46%" r="62%">'+
+     '<stop offset="0%" stop-color="#F3F0FF"/><stop offset="100%" stop-color="#A99DD6"/></radialGradient>'+
+     '<clipPath id="cp'+u+'"><path d="M10 62c11-17.5 25-26 40-26s29 8.5 40 26c-11 17.5-25 26-40 26s-29-8.5-40-26z"/></clipPath>'+
+     '<filter id="sh'+u+'"><feGaussianBlur stdDeviation="2.2"/></filter>'+vign(u)+'</defs>'+
+   '<rect width="100" height="150" fill="url(#sn'+u+')"/>'+
+   '<path d="M10 62c11-17.5 25-26 40-26s29 8.5 40 26c-11 17.5-25 26-40 26s-29-8.5-40-26z" fill="url(#wh'+u+')"/>'+
+   '<g clip-path="url(#cp'+u+')">'+
+     '<ellipse cx="50" cy="40" rx="46" ry="16" fill="#241A4A" opacity=".55" filter="url(#sh'+u+')"/>'+
+     '<circle cx="50" cy="62" r="14" fill="url(#ir'+u+')"/>'+sp+
+     '<circle cx="50" cy="62" r="14" fill="none" stroke="#0E0733" stroke-width="2.2" opacity=".9"/>'+
+     '<circle cx="50" cy="62" r="5.4" fill="#04020D"/>'+
+     '<circle cx="45.4" cy="57.2" r="3.1" fill="#fff" opacity=".92"/>'+
+     '<circle cx="55.6" cy="66.4" r="1.4" fill="#fff" opacity=".45"/>'+
+   '</g>'+
+   '<path d="M10 62c11-17.5 25-26 40-26s29 8.5 40 26" fill="none" stroke="#0B0618" stroke-width="2.6" stroke-linecap="round"/>'+
+   '<path d="M10 62c11 17.5 25 26 40 26s29-8.5 40-26" fill="none" stroke="#0B0618" stroke-width="1.2" opacity=".75"/>'+
+   lash+
+   '<path d="M6 60c4-2 6-2 6-2" fill="none" stroke="#3A2B63" stroke-width="1" opacity=".8"/>'+
+   '<rect width="100" height="150" fill="url(#vg'+u+')"/>'+grain(u,'.95','.10')+'</svg>';
+}
+var MOTIF={reply:artReply,plan:artPlan,eye:artEye};
+function artHTML(r,capSize){
+  return '<div class="art '+r.art+'">'+MOTIF[r.id](++UID)+
+   (capSize?'<div class="cap"><div class="ct" style="font-size:'+capSize+'px">'+r.cap+'</div>'+
+    '<div class="cs">'+r.no+'</div></div>':'')+'</div>';
+}
+
+/* ===================== 集計 ===================== */
+function totalVio(who,rid){ var n=0; for(var k in S.days){
+  var v=S.days[k].v&&S.days[k].v[who]; if(!v) continue;
+  if(rid){ n+=v[rid]||0; } else { for(var x in v) n+=v[x]||0; } } return n; }
+function pend(who){ return S.pending.filter(function(p){ return p.who===who; }); }
+function firstDay(){ var m=null; for(var k in S.days){ if(!m||k<m) m=k; } return m; }
+function monthBad(rid){
+  var pre=vY+'-'+pad(vM+1), n=0, f=firstDay(), t=today();
+  if(rid==='plan'){
+    if(!f) return 0;
+    var dim=new Date(vY,vM+1,0).getDate();
+    for(var d=1;d<=dim;d++){ var k=vY+'-'+pad(vM+1)+'-'+pad(d);
+      if(k<f||k>=t) continue;
+      if(!sent(k,'momoka')) n++; if(!sent(k,'rio')) n++; }
+    return n;
+  }
+  for(var key in S.days){ if(key.indexOf(pre)!==0) continue;
+    n+=vio(key,'momoka',rid)+vio(key,'rio',rid); }
+  return n;
+}
+function streak(who){ var n=0, now=new Date();
+  for(var i=0;i<500;i++){ var k=ds(new Date(now.getTime()-i*86400000));
+    if(sent(k,who)) n++; else if(i===0) continue; else break; } return n; }
+function keep(rid,who){ var bad=0, now=new Date(), t=today(), f=firstDay();
+  for(var i=0;i<30;i++){ var k=ds(new Date(now.getTime()-i*86400000));
+    if(f&&k<f) continue;
+    if(rid==='plan'){ if(!sent(k,who)&&k<t) bad++; }
+    else if(vio(k,who,rid)>0) bad++; }
+  return Math.max(0,Math.round((30-bad)/30*100));
+}
+
+/* ===================== 違反の記録（＝罰ゲーム自動確定） ===================== */
+function addVio(who,rid,k){
+  var a=poolFor(who), pick=a[Math.floor(Math.random()*a.length)], d=k.split('-');
+  var no=S.pool.indexOf(pick); no=no<0?0:no+1;
+  var pid='n'+uid(), dt=(+d[1])+'/'+(+d[2]);
+  addEv({k:'v',w:who,d:k,r:rid});
+  addEv({k:'pn',w:who,id:pid,tx:pick.text,no:no,d:dt});
+  return {id:pid,who:who,no:no,text:pick.text,date:dt};
+}
+function subVio(who,rid,k){
+  if(vio(k,who,rid)<=0) return false;
+  var mine=S.pending.filter(function(p){ return p.who===who; });
+  addEv({k:'v-',w:who,d:k,r:rid});
+  if(mine.length) addEv({k:'pk',id:mine[mine.length-1].id});
+  return true;
+}
+
+/* ===================== 画面 ===================== */
+var me=null, tab='home', openId=null, dTab='epi', reveal=null;
+var draft='', newTarget='both';
+var selK=today(), vY=new Date().getFullYear(), vM=new Date().getMonth();
+
+function vHome(){
+  var h='', rank=RULES.slice().sort(function(a,b){ return monthBad(b.id)-monthBad(a.id); });
+  h+='<div class="sect"><h2>今月の違反ランキング</h2><div class="rail">';
+  rank.forEach(function(r,i){
+    h+='<button class="top3" data-act="open" data-rule="'+r.id+'"><span class="rank">'+(i+1)+'</span>'+
+       '<span class="poster">'+artHTML(r,13)+
+       (monthBad(r.id)>0?'<span class="badge">'+monthBad(r.id)+'件</span>':'')+'</span></button>';
+  });
+  h+='</div></div>';
+
+  h+='<div class="sect"><h2>配信中の掟</h2><div class="rail">'+
+     RULES.map(function(r){ return '<button class="poster" data-act="open" data-rule="'+r.id+'">'+artHTML(r,14)+'</button>'; }).join('')+
+     '</div></div>';
+
+  var ps=pend(me);
+  h+='<div class="sect"><h2>未実行の罰ゲーム</h2><div class="rail">';
+  if(ps.length){
+    ps.forEach(function(p){
+      h+='<button class="wide" data-act="done" data-id="'+p.id+'">'+
+        '<span class="th"><span class="art a-reply">'+artReply(++UID)+'</span>'+
+        '<span class="pl"><span><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></span></span>'+
+        '<span class="prog"><i style="width:0%"></i></span>'+
+        '<span class="tt">'+esc(p.text)+'</span>'+
+        '<span class="mt">'+p.date+' 確定 ・ タップで完了</span></button>';
+    });
+  }else{
+    h+='<div class="wide"><div class="th" style="display:grid;place-content:center;background:#141414;color:#808080;font-size:11px">未実行なし</div>'+
+      '<div class="tt" style="color:#808080">'+NAME[me]+'さんの罰ゲームはゼロ件です</div></div>';
+  }
+  h+='</div></div>';
+
+  h+='<div class="sect"><h2>継続中の記録</h2><div class="stats">'+
+     '<div class="stat"><div class="n" style="color:var(--grn)">'+streak(me)+'</div><div class="l">日連続<br>予定送信</div></div>'+
+     '<div class="stat"><div class="n">'+totalVio(me)+'</div><div class="l">通算<br>違反</div></div>'+
+     '<div class="stat"><div class="n" style="color:var(--nf)">'+ps.length+'</div><div class="l">未実行<br>罰ゲーム</div></div>'+
+     '</div></div>';
+  return h;
+}
+
+function nextOff(){ var n=new Date(); return vY>n.getFullYear()||(vY===n.getFullYear()&&vM>=n.getMonth()); }
+function dayVio(k,who){ var v=S.days[k]&&S.days[k].v&&S.days[k].v[who], n=0; if(v) for(var x in v) n+=v[x]||0; return n; }
+
+function vCal(){
+  var t=today(), h='';
+  h+='<div class="sect" style="margin-top:6px"><div class="cal-head">'+
+     '<button class="navb" data-act="prevm"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button>'+
+     '<div class="m">'+vY+'年 '+(vM+1)+'月</div>'+
+     '<button class="navb" data-act="nextm"'+(nextOff()?' disabled':'')+'><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></button></div>';
+  h+='<div class="g7">'+WEEK.map(function(w,i){ return '<div class="dow'+(i===0||i===6?' s':'')+'">'+w+'</div>'; }).join('')+'</div>';
+  var start=new Date(vY,vM,1).getDay(), dim=new Date(vY,vM+1,0).getDate();
+  h+='<div class="g7" style="margin-top:5px">';
+  for(var i=0;i<start;i++) h+='<div class="day void"></div>';
+  for(var d=1;d<=dim;d++){
+    var k=vY+'-'+pad(vM+1)+'-'+pad(d);
+    var g=sent(k,'momoka')||sent(k,'rio'), r=(dayVio(k,'momoka')+dayVio(k,'rio'))>0;
+    h+='<button class="day'+(k===t?' today':'')+(k===selK?' sel':'')+(k>t?' fut':'')+'" data-act="day" data-k="'+k+'">'+
+       '<span>'+d+'</span><span class="mk">'+(g?'<i class="g"></i>':'')+(r?'<i class="r"></i>':'')+'</span></button>';
+  }
+  h+='</div>';
+  h+='<div style="display:flex;gap:16px;justify-content:center;margin-top:12px;font-size:10px;color:#808080">'+
+     '<span><i style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--grn);margin-right:5px"></i>予定送信</span>'+
+     '<span><i style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--nf);margin-right:5px"></i>違反</span></div></div>';
+
+  var p=selK.split('-'), dt=new Date(+p[0],+p[1]-1,+p[2]);
+  h+='<div class="sect" style="margin-top:0"><div class="edit"><h3>'+(+p[1])+'月'+(+p[2])+'日（'+WEEK[dt.getDay()]+'）の記録</h3>';
+  ['momoka','rio'].forEach(function(w){
+    h+='<div class="erow"><div class="lb">'+NAME[w]+'<i>朝の予定</i></div>'+
+       '<button class="tg" data-act="sent" data-who="'+w+'" aria-pressed="'+(sent(selK,w)?'true':'false')+'">'+
+       (sent(selK,w)?'送信済':'未送信')+'</button></div>';
+  });
+  RULES.forEach(function(r){
+    if(!r.cnt) return;
+    ['momoka','rio'].forEach(function(w){
+      h+='<div class="erow"><div class="lb">'+NAME[w]+'<i>'+r.no+' '+r.t+'</i></div>'+
+        '<div class="step"><button data-act="step" data-rule="'+r.id+'" data-who="'+w+'" data-d="-1">−</button>'+
+        '<span class="v tnum">'+vio(selK,w,r.id)+'</span>'+
+        '<button data-act="step" data-rule="'+r.id+'" data-who="'+w+'" data-d="1">＋</button></div></div>';
+    });
+  });
+  h+='<div class="erow" style="border-top:1px solid #202020"><div class="lb" style="color:#808080;font-size:11px">＋を押すと罰ゲームが1件増え、−で1件減ります</div></div>';
+  h+='</div></div>';
+  return h;
+}
+
+function vList(){
+  var ps=pend(me), h='';
+  h+='<div class="sect" style="margin-top:6px"><div class="stats">'+
+     '<div class="stat"><div class="n" style="color:var(--nf)">'+ps.length+'</div><div class="l">未実行の<br>罰ゲーム</div></div>'+
+     '<div class="stat"><div class="n">'+(S.doneN[me]||0)+'</div><div class="l">実行<br>済み</div></div>'+
+     '<div class="stat"><div class="n" style="color:var(--grn)">'+streak(me)+'</div><div class="l">連続<br>予定送信</div></div>'+
+     '</div></div>';
+
+  h+='<div class="sect"><h2>ダウンロード済み（未実行）</h2>';
+  if(ps.length){
+    ps.forEach(function(p,i){
+      h+='<div class="prow" style="animation-delay:'+(i*.05)+'s"><div class="ix">'+(p.no||(i+1))+'</div>'+
+        '<div class="in"><div class="t">'+esc(p.text)+'</div><div class="s">'+p.date+' 確定 ・ '+NAME[p.who]+'</div></div>'+
+        '<button class="ck" data-act="done" data-id="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg></button></div>';
+    });
+  }else{
+    h+='<div style="padding:22px 16px;color:#808080;font-size:12px">未実行の罰ゲームはありません。掟を破ると、ここに自動で1件たまります。</div>';
+  }
+  h+='</div>';
+
+  h+='<div class="sect"><h2>罰ゲームを書く</h2><div class="addbox">'+
+     '<input id="newPen" type="text" maxlength="60" placeholder="例：コンビニでアイスをおごる" value="'+esc(draft)+'">'+
+     '<div class="seg3">'+
+       '<button data-act="tg" data-t="momoka" aria-pressed="'+(newTarget==='momoka')+'">桃香に科す</button>'+
+       '<button data-act="tg" data-t="rio" aria-pressed="'+(newTarget==='rio')+'">理央に科す</button>'+
+       '<button data-act="tg" data-t="both" aria-pressed="'+(newTarget==='both')+'">両方</button>'+
+     '</div>'+
+     '<button class="bigbtn b-red" data-act="add" style="margin:0">'+
+     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>追加する</button>'+
+     '<div style="font-size:10.5px;color:#808080;margin-top:10px;line-height:1.6">'+
+     'ここに書いたものが、相手が違反したときの抽選に入ります。</div></div></div>';
+
+  h+='<div class="sect"><h2>罰ゲーム一覧（'+S.pool.length+'件）</h2>';
+  S.pool.forEach(function(x,i){
+    h+='<div class="prow" style="animation-delay:'+(i*.03)+'s"><div class="ix">'+(i+1)+'</div>'+
+      '<div class="in"><div class="t">'+esc(x.text)+'</div><div class="s">'+
+      '<span class="chip'+(x.target!=='both'?' t-'+x.target:'')+'">'+(x.target==='both'?'両方':NAME[x.target]+'に')+'</span>'+
+      (x.by?' ・ '+NAME[x.by]+'が追加':' ・ 最初から')+'</div></div>'+
+      '<button class="del" data-act="delpen" data-id="'+x.id+'" aria-label="削除">'+
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+  });
+  h+='</div>';
+
+  var favs=RULES.filter(function(r){ return S.fav[r.id]; });
+  h+='<div class="sect"><h2>マイリスト</h2>';
+  h+= favs.length ? '<div class="rail">'+favs.map(function(r){
+        return '<button class="poster" data-act="open" data-rule="'+r.id+'">'+artHTML(r,14)+'</button>'; }).join('')+'</div>'
+      : '<div style="padding:8px 16px 0;color:#808080;font-size:12px">掟の詳細画面で「マイリスト」を押すと、ここに並びます。</div>';
+  h+='</div>';
+
+  h+='<div class="sect">'+
+     '<button class="lnk" data-act="switch"><span>プロフィールの切替（現在：'+NAME[me]+'）</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></button>'+
+     '<button class="lnk" data-act="sound"><span>効果音</span><span style="font-size:11.5px;color:#808080">'+(LOC.mute?'オフ':'オン')+'</span></button>'+
+     '<button class="lnk" data-act="reset"><span style="color:#FF6470">すべての記録を消去</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></button>'+
+     '</div>';
+  return h;
+}
+
+function vDetail(id){
+  var r=R(id), t=today(), h='';
+  h+='<div class="hero">'+artHTML(r,0)+'<div class="veil"></div>'+
+     '<button class="x" data-act="close"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'+
+     '<div class="mute"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9.5 21 14M21 9.5 17 14" stroke-linecap="round"/></svg></div></div>';
+  h+='<div class="d-body">';
+  h+='<div class="d-eyebrow"><svg viewBox="0 0 24 44" style="width:9px;height:17px;display:block"><path d="M0 0h6.4l11.2 31.4V0H24v44h-6.4L6.4 12.6V44H0z" fill="#E50914"/></svg><span class="w">掟 シリーズ</span></div>';
+  h+='<h2 class="d-title">'+r.t+'</h2>';
+  h+='<div class="d-meta"><span class="mm">'+keep(r.id,me)+'% 遵守</span><span>2026</span>'+
+     '<span class="tagbox">TV-MA</span><span>'+r.no+'</span><span class="tagfill">HD</span><span class="tagbox">AD</span></div>';
+
+  if(r.cnt){
+    h+='<button class="bigbtn b-red'+(reveal?' pulse':'')+'" data-act="vio" data-rule="'+id+'">'+
+       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 1.8 20.5h20.4z"/><path d="M12 10v4.4M12 17.4v.2"/></svg>違反（＋1）</button>';
+    h+='<button class="bigbtn b-sub" data-act="undo" data-rule="'+id+'">'+
+       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>訂正（−1）</button>';
+    if(reveal) h+=revealHTML();
+    h+='<div class="timeline"><span class="bar"><i style="width:'+Math.min(100,vio(t,me,id)*20)+'%"></i></span>'+
+       '<span class="lb">本日 '+vio(t,me,id)+' 件 ／ 通算 '+totalVio(me,id)+' 件</span></div>';
+  }else{
+    var ok=sent(t,me);
+    h+='<button class="bigbtn '+(ok?'b-sub':'b-play')+'" data-act="plan">'+
+       (ok?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg>本日は送信済み'
+          :'<svg viewBox="0 0 24 24" fill="#000"><path d="M7 4l13 8-13 8z"/></svg>再生（送信したと記録）')+'</button>';
+    h+='<button class="bigbtn b-sub" data-act="planoff">'+
+       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>記録を取り消す</button>';
+    h+='<div class="timeline"><span class="bar"><i style="width:'+Math.min(100,streak(me)/7*100)+'%"></i></span>'+
+       '<span class="lb">'+streak(me)+'日連続</span></div>';
+  }
+
+  h+='<p class="d-sub">'+r.sy+'</p>';
+  h+='<div class="d-credit">違反者: <b>桃香, 理央</b></div>';
+  h+='<div class="d-credit">制定: <b>桃香・理央</b> ・ 2026年9月28日</div>';
+  h+='<div class="acts">'+
+     '<button class="act'+(S.fav[id]?' on':'')+'" data-act="fav" data-rule="'+id+'">'+
+       (S.fav[id]?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg>'
+                 :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>')+
+       '<span>マイリスト</span></button>'+
+     '<button class="act'+(S.rate[id]?' on':'')+'" data-act="rate" data-rule="'+id+'">'+
+       '<svg viewBox="0 0 24 24" fill="'+(S.rate[id]?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 10v10H4V10zM7 10l4.5-7 1 .5a2.5 2.5 0 0 1 1.3 2.8L13 10h5.5a2 2 0 0 1 2 2.4l-1.3 6A2 2 0 0 1 17.2 20H7z"/></svg>'+
+       '<span>評価</span></button>'+
+     '<button class="act" data-act="share" data-rule="'+id+'">'+
+       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>'+
+       '<span>シェア</span></button></div>';
+
+  h+='<div class="tabs">'+
+     '<button data-act="dtab" data-t="epi" aria-selected="'+(dTab==='epi')+'">記録</button>'+
+     '<button data-act="dtab" data-t="more" aria-selected="'+(dTab==='more')+'">関連の掟</button>'+
+     '<button data-act="dtab" data-t="pen" aria-selected="'+(dTab==='pen')+'">罰ゲーム一覧</button></div><div>';
+
+  if(dTab==='epi'){
+    var now=new Date();
+    for(var i=0;i<8;i++){
+      var dd=new Date(now.getTime()-i*86400000), k=ds(dd), st,cl,desc;
+      if(!r.cnt){ var s2=sent(k,me); st=s2?'送信済':(k===t?'未送信':'違反'); cl=s2?'p-ok':(k===t?'p-na':'p-ng');
+        desc=s2?NAME[me]+'さんはこの日、予定を送信しました。':'この日の送信記録はありません。'; }
+      else{ var n2=vio(k,me,id); st=n2?('違反 '+n2+'件'):'違反なし'; cl=n2?'p-ng':'p-ok';
+        desc=n2?NAME[me]+'さんはこの日、'+n2+'回この掟を破りました。':'この日は掟が守られました。'; }
+      h+='<button class="epi" data-act="jump" data-k="'+k+'">'+
+        '<span class="th">'+artHTML(r,0)+'<span class="ov"></span><span class="dn">'+dd.getDate()+'</span></span>'+
+        '<span class="in"><span class="h"><span>第'+(8-i)+'話 '+(dd.getMonth()+1)+'/'+dd.getDate()+'（'+WEEK[dd.getDay()]+'）</span>'+
+        '<span class="du">'+(i===0?'本日':(i+'日前'))+'</span></span>'+
+        '<span class="d">'+desc+'</span><span class="st"><span class="pill '+cl+'">'+st+'</span></span></span></button>';
+    }
+  }
+  if(dTab==='more'){
+    h+='<div class="rail" style="padding-top:14px">'+RULES.filter(function(x){ return x.id!==id; })
+      .map(function(x){ return '<button class="poster" data-act="open" data-rule="'+x.id+'">'+artHTML(x,14)+'</button>'; }).join('')+
+      '</div><p class="d-sub" style="padding-top:14px;color:#808080">同じ二人によって、同じ日に制定された残りの掟です。</p>';
+  }
+  if(dTab==='pen'){
+    S.pool.forEach(function(x,i){
+      h+='<div class="prow" style="padding-inline:0;animation-delay:'+(i*.04)+'s"><div class="ix">'+(i+1)+'</div>'+
+        '<div class="in"><div class="t">'+esc(x.text)+'</div><div class="s">'+
+        '<span class="chip'+(x.target!=='both'?' t-'+x.target:'')+'">'+(x.target==='both'?'両方':NAME[x.target]+'に')+'</span>'+
+        (x.by?' ・ '+NAME[x.by]+'が追加':' ・ 最初から')+'</div></div></div>';
+    });
+    h+='<p class="d-sub" style="padding-top:12px;color:#808080">追加・削除は「マイリスト」タブでできます。</p>';
+  }
+  h+='</div></div>';
+  return h;
+}
+function revealHTML(){
+  return '<div class="reveal" id="rev"><div class="cnt">罰ゲーム 自動抽選</div>'+
+    '<div class="tx spin" id="revTx">'+esc(poolFor(me)[0].text)+'</div>'+
+    '<div class="ft" id="revFt">抽選中…</div></div>';
+}
+
+/* ===================== 描画 ===================== */
+var screenEl=document.getElementById('screen'), detailEl=document.getElementById('detail');
+var appEl=document.getElementById('app'), gateEl=document.getElementById('gate'), tabbarEl=document.getElementById('tabbar');
+
+function render(){
+  if(!me){ gateEl.hidden=false; appEl.hidden=true; tabbarEl.hidden=true; detailEl.hidden=true;
+    document.getElementById('gateArt').innerHTML=
+      '<div class="art a-eye" style="border-radius:0">'+artEye(++UID)+'</div><div class="veil"></div>'+
+      '<div class="gate-logo"><div class="t1">二人の<span class="t2">掟</span></div></div>';
+    return; }
+  gateEl.hidden=true; appEl.hidden=false; tabbarEl.hidden=false;
+  document.getElementById('navTitle').textContent =
+    tab==='home' ? NAME[me]+'さんへ' : (tab==='cal'?'カレンダー':'マイリスト');
+  screenEl.innerHTML = tab==='home'?vHome() : tab==='cal'?vCal() : vList();
+  Array.prototype.forEach.call(document.querySelectorAll('.tb'),function(b){
+    b.setAttribute('aria-current', b.getAttribute('data-tab')===tab?'true':'false'); });
+  if(openId){ detailEl.hidden=false; detailEl.innerHTML=vDetail(openId); }
+  else{ detailEl.hidden=true; detailEl.innerHTML=''; detailEl.classList.remove('open'); }
+}
+
+/* ===================== 音 ===================== */
+var AC=null;
+function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+function tudum(){ if(LOC.mute) return; var a=ac(); if(!a) return;
+  var t=a.currentTime;
+  [[0,.16],[0.17,.5]].forEach(function(p,i){
+    var o=a.createOscillator(), o2=a.createOscillator(), g=a.createGain();
+    o.type='sine'; o2.type='triangle';
+    o.frequency.setValueAtTime(73.4,t+p[0]); o2.frequency.setValueAtTime(146.8,t+p[0]);
+    g.gain.setValueAtTime(.0001,t+p[0]);
+    g.gain.exponentialRampToValueAtTime(i?.5:.38,t+p[0]+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+p[0]+p[1]);
+    o.connect(g); o2.connect(g); g.connect(a.destination);
+    o.start(t+p[0]); o2.start(t+p[0]); o.stop(t+p[0]+p[1]+.02); o2.stop(t+p[0]+p[1]+.02);
+  }); }
+function blip(f){ if(LOC.mute) return; var a=ac(); if(!a) return;
+  var t=a.currentTime,o=a.createOscillator(),g=a.createGain();
+  o.type='square'; o.frequency.setValueAtTime(f||520,t);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.085,t+.008);
+  g.gain.exponentialRampToValueAtTime(.0001,t+.11);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+.13); }
+function buzz(n){ if(navigator.vibrate) navigator.vibrate(n||18); }
+
+/* ===================== 抽選演出 ===================== */
+function runReveal(it){
+  var tx=document.getElementById('revTx'), ft=document.getElementById('revFt');
+  if(!tx) return;
+  var a=poolFor(me), i=Math.floor(Math.random()*a.length), n=0, total=15+Math.floor(Math.random()*6);
+  (function step(){
+    i=(i+1)%a.length; n++;
+    tx.textContent=a[i].text; blip(300+n*16);
+    if(n<total){ setTimeout(step,46+n*n*1.9); }
+    else{
+      tx.textContent=it.text; tx.className='tx';
+      ft.textContent='第'+it.no+'号 ・ マイリストに追加しました';
+      tudum(); buzz([22,46,22]);
+    }
+  })();
+}
+
+/* ===================== 操作 ===================== */
+document.addEventListener('input',function(ev){
+  if(ev.target&&ev.target.id==='newPen') draft=ev.target.value;
+},false);
+document.addEventListener('keydown',function(ev){
+  if(ev.key==='Enter'&&ev.target&&ev.target.id==='newPen'){
+    ev.preventDefault();
+    var b=document.querySelector('[data-act="add"]'); if(b) b.click();
+  }
+},false);
+document.addEventListener('click',function(ev){
+  var el=ev.target.closest('[data-act]'); if(!el) return;
+  var a=el.getAttribute('data-act'), t=today();
+
+  if(a==='pick'){ var w=el.getAttribute('data-who');
+    if(w==='kids'){ blip(300); return; }
+    me=LOC.me=w; newTarget=(w==='rio'?'momoka':'rio'); saveLocal(); tudum();
+    tab='home'; openId=null; reveal=null; render(); return; }
+  if(a==='tab'){ tab=el.getAttribute('data-tab'); openId=null; reveal=null; buzz(); render(); window.scrollTo(0,0); return; }
+  if(a==='open'){ openId=el.getAttribute('data-rule'); dTab='epi'; reveal=null; blip(620); render();
+    detailEl.classList.add('open'); detailEl.scrollTop=0; return; }
+  if(a==='close'){ openId=null; reveal=null; blip(420); render(); return; }
+  if(a==='dtab'){ dTab=el.getAttribute('data-t'); render(); detailEl.classList.remove('open'); return; }
+
+  if(a==='vio'){
+    var rid=el.getAttribute('data-rule');
+    var it=addVio(me,rid,t); reveal=it; buzz(28); render();
+    detailEl.classList.remove('open'); runReveal(it); return;
+  }
+  if(a==='undo'){
+    var rid2=el.getAttribute('data-rule');
+    if(subVio(me,rid2,t)) blip(340); else blip(180);
+    reveal=null; render(); detailEl.classList.remove('open'); return;
+  }
+  if(a==='plan'){ var nv=!sent(t,me); addEv({k:'s',w:me,d:t,v:nv}); blip(nv?700:360); buzz();
+    render(); detailEl.classList.remove('open'); return; }
+  if(a==='planoff'){ addEv({k:'s',w:me,d:t,v:false}); blip(340); render();
+    detailEl.classList.remove('open'); return; }
+
+  if(a==='fav'){ var f=el.getAttribute('data-rule'), nf=!S.fav[f];
+    addEv({k:'f',r:f,v:nf}); blip(nf?700:420); render(); detailEl.classList.remove('open'); return; }
+  if(a==='rate'){ var g=el.getAttribute('data-rule'), ng=!S.rate[g];
+    addEv({k:'rt',r:g,v:ng}); blip(ng?820:400); render(); detailEl.classList.remove('open'); return; }
+  if(a==='share'){
+    var r3=R(el.getAttribute('data-rule')), txt='【'+r3.no+'】'+r3.t+' ─ 二人の掟';
+    if(navigator.share){ navigator.share({title:'二人の掟',text:txt,url:location.href}).catch(function(){}); }
+    else if(navigator.clipboard){ navigator.clipboard.writeText(txt+' '+location.href); }
+    return; }
+
+  if(a==='prevm'){ vM--; if(vM<0){vM=11;vY--;} render(); return; }
+  if(a==='nextm'){ vM++; if(vM>11){vM=0;vY++;} render(); return; }
+  if(a==='day'){ selK=el.getAttribute('data-k'); blip(560); render(); return; }
+  if(a==='sent'){ var w2=el.getAttribute('data-who');
+    addEv({k:'s',w:w2,d:selK,v:!sent(selK,w2)}); blip(500); render(); return; }
+  if(a==='step'){
+    var w3=el.getAttribute('data-who'), r4=el.getAttribute('data-rule'), d=+el.getAttribute('data-d');
+    if(d>0){ addVio(w3,r4,selK); blip(260); } else { if(subVio(w3,r4,selK)) blip(480); else blip(180); }
+    render(); return; }
+  if(a==='jump'){ selK=el.getAttribute('data-k'); openId=null; reveal=null; tab='cal';
+    var kk=selK.split('-'); vY=+kk[0]; vM=+kk[1]-1; render(); window.scrollTo(0,0); return; }
+
+  if(a==='done'){
+    addEv({k:'pc',id:el.getAttribute('data-id')});
+    blip(880); buzz(); render(); return; }
+
+  if(a==='tg'){
+    newTarget=el.getAttribute('data-t');
+    var inp=document.getElementById('newPen'); if(inp) draft=inp.value;
+    Array.prototype.forEach.call(el.parentNode.children,function(b){
+      b.setAttribute('aria-pressed', b===el?'true':'false'); });
+    blip(560); return; }
+  if(a==='add'){
+    var inp2=document.getElementById('newPen'), tx2=(inp2?inp2.value:'').trim();
+    if(!tx2){ blip(170); if(inp2) inp2.focus(); return; }
+    addEv({k:'pa',w:me,id:'u'+uid(),tx:tx2,tg:newTarget});
+    draft=''; blip(820); buzz(); render(); return; }
+  if(a==='delpen'){
+    var pid=el.getAttribute('data-id');
+    addEv({k:'pd',id:pid}); blip(300); render(); return; }
+  if(a==='switch'){ me=null; LOC.me=null; openId=null; reveal=null; saveLocal(); render(); return; }
+  if(a==='sound'){ LOC.mute=!LOC.mute; saveLocal(); if(!LOC.mute) blip(700); render(); return; }
+  if(a==='reset'){
+    if(!confirm('二人ぶんの記録をすべて消します。よろしいですか？')) return;
+    addEv({k:'zz'}); me=null; LOC.me=null; openId=null; reveal=null; saveLocal(); render(); return; }
+},false);
+
+unionEv(SEED); fold(); saveLocal();
+render(); paintSync(); pull();
+setInterval(function(){ if(!document.hidden) pull(); },3000);
+document.addEventListener('visibilitychange',function(){ if(!document.hidden) pull(); },false);
+window.addEventListener('online',function(){ pull(); },false);
+})();
+</script>
+
+</body>
+</html>
