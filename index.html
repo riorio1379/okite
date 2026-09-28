@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>二人の掟</title>
 <meta name="theme-color" content="#000000">
+<meta name="app-build" content="20260928-195918">
+<meta http-equiv="Cache-Control" content="no-cache">
 <meta name="description" content="桃香と理央の掟。">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -1069,6 +1071,23 @@ document.addEventListener('click',function(ev){
     if(!confirm('二人ぶんの記録をすべて消します。よろしいですか？')) return;
     addEv({k:'zz'}); me=null; LOC.me=null; openId=null; reveal=null; saveLocal(); render(); return; }
 },false);
+
+/* ---- 新しい版が出ていたら、自動で入れ替わる ---- */
+var BUILD='20260928-195918';
+setTimeout(function(){
+  try{
+    if(sessionStorage.getItem('okite-reloaded')) return;
+    fetch(location.pathname+'?cb='+Date.now(),{cache:'no-store'})
+    .then(function(r){ return r.text(); })
+    .then(function(t){
+      var m=t.match(/name="app-build" content="([^"]+)"/);
+      if(m&&m[1]&&m[1]!==BUILD){
+        sessionStorage.setItem('okite-reloaded','1');
+        location.replace(location.pathname+'?v='+encodeURIComponent(m[1]));
+      }
+    }).catch(function(){});
+  }catch(e){}
+},1200);
 
 unionEv(SEED); fold(); saveLocal();
 render(); paintSync(); pull();
