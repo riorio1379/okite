@@ -363,12 +363,37 @@ function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(
 function saveLocal(){ try{ localStorage.setItem(LKEY,JSON.stringify(EV));
   localStorage.setItem(LLOC,JSON.stringify(LOC)); }catch(e){} }
 function save(){ saveLocal(); push(); }
+/* 受け取ったイベントは全て検証する。行は誰でも書けるので、中身を信用しない */
+var KINDS={'v':1,'v-':1,'s':1,'pa':1,'pd':1,'pn':1,'pc':1,'pk':1,'f':1,'rt':1,'zz':1};
+var WHO={momoka:1,rio:1}, RID={reply:1,plan:1,eye:1}, TG={both:1,momoka:1,rio:1};
+function sid(x){ return (typeof x==='string'&&/^[A-Za-z0-9_.:-]{1,64}$/.test(x))?x:null; }
+function stx(x,n){ return (typeof x==='string'&&x.length>0&&x.length<=n)?x:null; }
+function isDay(x){ return typeof x==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x); }
+function okEv(e){
+  if(!e||typeof e!=='object') return null;
+  if(!sid(e.i)||!KINDS[e.k]||typeof e.t!=='number'||!isFinite(e.t)) return null;
+  var o={i:e.i,k:e.k,t:e.t};
+  if(e.w!==undefined){ if(!WHO[e.w]) return null; o.w=e.w; }
+  if(e.k==='v'||e.k==='v-'){ if(!o.w||!isDay(e.d)||!RID[e.r]) return null; o.d=e.d; o.r=e.r; }
+  else if(e.k==='s'){ if(!o.w||!isDay(e.d)) return null; o.d=e.d; o.v=!!e.v; }
+  else if(e.k==='pa'){ if(!sid(e.id)||!stx(e.tx,200)||!TG[e.tg]) return null;
+    o.id=e.id; o.tx=e.tx; o.tg=e.tg; }
+  else if(e.k==='pd'||e.k==='pc'||e.k==='pk'){ if(!sid(e.id)) return null; o.id=e.id; }
+  else if(e.k==='pn'){ if(!o.w||!sid(e.id)||!stx(e.tx,200)) return null;
+    o.id=e.id; o.tx=e.tx;
+    o.no=(typeof e.no==='number'&&e.no>=0&&e.no<=999)?(e.no|0):0;
+    o.d=stx(e.d,12)||''; }
+  else if(e.k==='f'||e.k==='rt'){ if(!RID[e.r]) return null; o.r=e.r; o.v=!!e.v; }
+  return o;
+}
 function unionEv(list){ var ch=0;
-  for(var i=0;i<(list||[]).length;i++){ var e=list[i];
-    if(e&&e.i&&!SEEN[e.i]){ SEEN[e.i]=1; EV.push(e); ch=1; } }
+  if(!list||typeof list.length!=='number'||list.length>20000) return 0;
+  for(var i=0;i<list.length;i++){ var e=okEv(list[i]);
+    if(e&&!SEEN[e.i]){ SEEN[e.i]=1; EV.push(e); ch=1; } }
   return ch; }
 function addEv(e){ e.i=e.i||uid(); e.t=e.t||Date.now();
-  if(SEEN[e.i]) return e; SEEN[e.i]=1; EV.push(e); fold(); saveLocal(); push(); return e; }
+  var v=okEv(e); if(!v||SEEN[v.i]) return e;
+  SEEN[v.i]=1; EV.push(v); fold(); saveLocal(); push(); return e; }
 
 function fold(){
   EV.sort(function(a,b){ return (a.t||0)-(b.t||0); });
@@ -669,12 +694,12 @@ function vHome(){
   h+='<div class="sect"><h2>未実行の罰ゲーム</h2><div class="rail">';
   if(ps.length){
     ps.forEach(function(p){
-      h+='<button class="wide" data-act="done" data-id="'+p.id+'">'+
+      h+='<button class="wide" data-act="done" data-id="'+esc(p.id)+'">'+
         '<span class="th"><span class="art a-reply">'+artReply(++UID)+'</span>'+
         '<span class="pl"><span><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span></span></span>'+
         '<span class="prog"><i style="width:0%"></i></span>'+
         '<span class="tt">'+esc(p.text)+'</span>'+
-        '<span class="mt">'+p.date+' 確定 ・ タップで完了</span></button>';
+        '<span class="mt">'+esc(p.date)+' 確定 ・ タップで完了</span></button>';
     });
   }else{
     h+='<div class="wide"><div class="th" style="display:grid;place-content:center;background:#141414;color:#808080;font-size:11px">未実行なし</div>'+
@@ -746,9 +771,9 @@ function vList(){
   h+='<div class="sect"><h2>ダウンロード済み（未実行）</h2>';
   if(ps.length){
     ps.forEach(function(p,i){
-      h+='<div class="prow" style="animation-delay:'+(i*.05)+'s"><div class="ix">'+(p.no||(i+1))+'</div>'+
-        '<div class="in"><div class="t">'+esc(p.text)+'</div><div class="s">'+p.date+' 確定 ・ '+NAME[p.who]+'</div></div>'+
-        '<button class="ck" data-act="done" data-id="'+p.id+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg></button></div>';
+      h+='<div class="prow" style="animation-delay:'+(i*.05)+'s"><div class="ix">'+esc(p.no||(i+1))+'</div>'+
+        '<div class="in"><div class="t">'+esc(p.text)+'</div><div class="s">'+esc(p.date)+' 確定 ・ '+esc(NAME[p.who]||'')+'</div></div>'+
+        '<button class="ck" data-act="done" data-id="'+esc(p.id)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg></button></div>';
     });
   }else{
     h+='<div style="padding:22px 16px;color:#808080;font-size:12px">未実行の罰ゲームはありません。掟を破ると、ここに自動で1件たまります。</div>';
@@ -771,9 +796,9 @@ function vList(){
   S.pool.forEach(function(x,i){
     h+='<div class="prow" style="animation-delay:'+(i*.03)+'s"><div class="ix">'+(i+1)+'</div>'+
       '<div class="in"><div class="t">'+esc(x.text)+'</div><div class="s">'+
-      '<span class="chip'+(x.target!=='both'?' t-'+x.target:'')+'">'+(x.target==='both'?'両方':NAME[x.target]+'に')+'</span>'+
-      (x.by?' ・ '+NAME[x.by]+'が追加':' ・ 最初から')+'</div></div>'+
-      '<button class="del" data-act="delpen" data-id="'+x.id+'" aria-label="削除">'+
+      '<span class="chip'+(TG[x.target]&&x.target!=='both'?' t-'+esc(x.target):'')+'">'+(x.target==='both'?'両方':esc(NAME[x.target]||'?')+'に')+'</span>'+
+      (x.by?' ・ '+esc(NAME[x.by]||'?')+'が追加':' ・ 最初から')+'</div></div>'+
+      '<button class="del" data-act="delpen" data-id="'+esc(x.id)+'" aria-label="削除">'
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
   });
   h+='</div>';
@@ -867,8 +892,8 @@ function vDetail(id){
     S.pool.forEach(function(x,i){
       h+='<div class="prow" style="padding-inline:0;animation-delay:'+(i*.04)+'s"><div class="ix">'+(i+1)+'</div>'+
         '<div class="in"><div class="t">'+esc(x.text)+'</div><div class="s">'+
-        '<span class="chip'+(x.target!=='both'?' t-'+x.target:'')+'">'+(x.target==='both'?'両方':NAME[x.target]+'に')+'</span>'+
-        (x.by?' ・ '+NAME[x.by]+'が追加':' ・ 最初から')+'</div></div></div>';
+        '<span class="chip'+(TG[x.target]&&x.target!=='both'?' t-'+esc(x.target):'')+'">'+(x.target==='both'?'両方':esc(NAME[x.target]||'?')+'に')+'</span>'+
+        (x.by?' ・ '+esc(NAME[x.by]||'?')+'が追加':' ・ 最初から')+'</div></div></div>';
     });
     h+='<p class="d-sub" style="padding-top:12px;color:#808080">追加・削除は「マイリスト」タブでできます。</p>';
   }
