@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>二人の掟</title>
 <meta name="theme-color" content="#000000">
-<meta name="app-build" content="20260929-015056">
+<meta name="app-build" content="20260929-020425">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="description" content="桃香と理央の掟。">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -204,16 +204,25 @@
   .p-na{background:#1E1E1E;color:var(--g3)}
 
   /* 罰ゲーム抽選（違反時に自動で出る） */
-  .reveal{background:var(--card);border-radius:8px;padding:15px;margin:2px 0 14px;
-    border:1px solid #241014;animation:popIn .4s var(--ease) both}
-  .reveal .cnt{font-size:9.5px;letter-spacing:.24em;color:var(--nf);font-weight:700;margin-bottom:8px}
-  .reveal .tx{font-size:15px;font-weight:900;line-height:1.5;min-height:46px;display:flex;align-items:center}
-  .reveal .tx.spin{color:var(--g3);
-    background:linear-gradient(90deg,#555 20%,#fff 50%,#555 80%);background-size:220% 100%;
-    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    animation:sweep .7s linear infinite}
-  .reveal .ft{font-size:10.5px;color:var(--g3);margin-top:8px}
-
+  /* 罰ゲームが届いたときの全面表示 */
+  .ack{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.93);display:flex;
+    align-items:center;justify-content:center;padding:22px;overflow-y:auto;
+    animation:fadeIn .3s both}
+  .ackbox{width:100%;max-width:380px;background:#141414;border:1px solid #2A1014;
+    border-radius:12px;padding:22px 18px 18px;animation:popIn .42s var(--ease) both}
+  .ackbox .eb{font-size:10px;letter-spacing:.34em;color:var(--nf);font-weight:700;margin-bottom:8px}
+  .ackbox h3{font-size:21px;font-weight:900;margin:0 0 4px;line-height:1.3}
+  .ackbox .sb{font-size:11.5px;color:var(--g3);margin:0 0 16px;line-height:1.6}
+  .ackitem{background:#1C1C1C;border-radius:8px;padding:14px;margin-bottom:10px}
+  .ackitem .at{font-size:15px;font-weight:900;line-height:1.5}
+  .ackitem .am{font-size:10.5px;color:var(--g3);margin-top:5px}
+  .ackitem .bigbtn{margin:12px 0 0;min-height:42px;font-size:14px}
+  .pen.nw{background:rgba(229,9,20,.07)}
+  .pen.nw .px{background:var(--nf);color:#fff}
+  .tbwrap{position:relative;display:inline-flex}
+  .tbdot{position:absolute;top:-4px;right:-9px;min-width:16px;height:16px;border-radius:99px;
+    background:var(--nf);color:#fff;font-size:9.5px;font-weight:700;display:grid;place-content:center;
+    padding:0 4px;line-height:1}
   /* ===================== カレンダー ===================== */
   .cal-head{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 12px}
   .cal-head .m{font-size:17px;font-weight:900}
@@ -335,7 +344,9 @@
 
 <div id="app" hidden>
   <div class="nav">
-    <svg class="nlogo" viewBox="0 0 24 44"><path d="M0 0h6.4l11.2 31.4V0H24v44h-6.4L6.4 12.6V44H0z" fill="#E50914"/></svg>
+    <button data-act="switch" aria-label="プロフィールを切り替える" style="padding:4px 6px;margin:-4px -6px">
+      <svg class="nlogo" viewBox="0 0 24 44"><path d="M0 0h6.4l11.2 31.4V0H24v44h-6.4L6.4 12.6V44H0z" fill="#E50914"/></svg>
+    </button>
     <h1 id="navTitle">ホーム</h1>
     <div class="nav-ic">
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13m0 0 4.5-4.5M12 16l-4.5-4.5M4 20h16"/></svg>
@@ -348,6 +359,7 @@
 </div>
 
 <div id="detail" hidden></div>
+<div id="ackLayer" hidden></div>
 
 <div class="tabbar" id="tabbar" hidden>
   <button class="tb" data-act="tab" data-tab="home" aria-current="true">
@@ -357,7 +369,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
     <span>カレンダー</span></button>
   <button class="tb" data-act="tab" data-tab="list">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12.5l2.8 2.8L16 10"/></svg>
+    <span class="tbwrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12.5l2.8 2.8L16 10"/></svg><span class="tbdot" id="tbdot" hidden>0</span></span>
     <span>マイリスト</span></button>
 </div>
 
@@ -378,7 +390,7 @@ function saveLocal(){ try{ localStorage.setItem(LKEY,JSON.stringify(EV));
   localStorage.setItem(LLOC,JSON.stringify(LOC)); }catch(e){} }
 function save(){ saveLocal(); push(); }
 /* 受け取ったイベントは全て検証する。行は誰でも書けるので、中身を信用しない */
-var KINDS={'v':1,'v-':1,'s':1,'pa':1,'pd':1,'pn':1,'pc':1,'pu':1,'pk':1,'f':1,'rt':1,'zz':1};
+var KINDS={'v':1,'v-':1,'s':1,'pa':1,'pd':1,'pn':1,'pc':1,'pu':1,'pv':1,'pk':1,'f':1,'rt':1,'zz':1};
 var WHO={momoka:1,rio:1}, RID={reply:1,plan:1,eye:1,lie:1}, TG={both:1,momoka:1,rio:1};
 function sid(x){ return (typeof x==='string'&&/^[A-Za-z0-9_.:-]{1,64}$/.test(x))?x:null; }
 function stx(x,n){ return (typeof x==='string'&&x.length>0&&x.length<=n)?x:null; }
@@ -392,7 +404,7 @@ function okEv(e){
   else if(e.k==='s'){ if(!o.w||!isDay(e.d)) return null; o.d=e.d; o.v=!!e.v; }
   else if(e.k==='pa'){ if(!sid(e.id)||!stx(e.tx,200)||!TG[e.tg]) return null;
     o.id=e.id; o.tx=e.tx; o.tg=e.tg; }
-  else if(e.k==='pd'||e.k==='pc'||e.k==='pu'||e.k==='pk'){ if(!sid(e.id)) return null; o.id=e.id; }
+  else if(e.k==='pd'||e.k==='pc'||e.k==='pu'||e.k==='pv'||e.k==='pk'){ if(!sid(e.id)) return null; o.id=e.id; }
   else if(e.k==='pn'){ if(!o.w||!sid(e.id)||!stx(e.tx,200)) return null;
     o.id=e.id; o.tx=e.tx;
     if(e.g!==undefined){ if(!WHO[e.g]) return null; o.g=e.g; }
@@ -413,7 +425,7 @@ function addEv(e){ e.i=e.i||uid(); e.t=e.t||Date.now();
 function fold(){
   EV.sort(function(a,b){ return (a.t||0)-(b.t||0); });
   var cut=0; EV.forEach(function(e){ if(e.k==='zz'&&e.t>cut) cut=e.t; });
-  var days={}, pool=[], del={}, pn={}, st={}, fav={}, rate={};
+  var days={}, pool=[], del={}, pn={}, st={}, ack={}, fav={}, rate={};
   DEF.forEach(function(t,i){ pool.push({id:'d'+i,text:t,target:'both',by:null}); });
   function D(k){ if(!days[k]) days[k]={v:{momoka:{},rio:{}},sent:{}}; return days[k]; }
   EV.forEach(function(e){
@@ -424,22 +436,25 @@ function fold(){
     else if(e.k==='pa'){ pool.push({id:e.id,text:e.tx,target:e.tg,by:e.w}); }
     else if(e.k==='pd'){ del[e.id]=1; }
     else if(e.k==='pn'){ pn[e.id]={id:e.id,who:e.w,no:e.no,text:e.tx,date:e.d,t:e.t,by:e.g||null}; }
+    else if(e.k==='pv'){ ack[e.id]=1; }
     else if(e.k==='pc'){ st[e.id]='done'; }
     else if(e.k==='pu'){ st[e.id]='open'; }
     else if(e.k==='pk'){ st[e.id]='cancel'; }
     else if(e.k==='f'){ fav[e.r]=!!e.v; }
     else if(e.k==='rt'){ rate[e.r]=!!e.v; }
   });
-  var pending=[], doneList=[], doneN={momoka:0,rio:0}, id;
+  var pending=[], doneList=[], newList=[], doneN={momoka:0,rio:0}, id;
   for(id in pn){
     if(st[id]==='cancel') continue;
-    if(st[id]==='done'){ doneList.push(pn[id]); doneN[pn[id].who]=(doneN[pn[id].who]||0)+1; }
-    else pending.push(pn[id]);
+    var it=pn[id];
+    if(st[id]==='done'){ doneList.push(it); doneN[it.who]=(doneN[it.who]||0)+1; }
+    else if(it.by&&!ack[id]) newList.push(it);   /* 相手から届いた・未確認 */
+    else pending.push(it);
   }
   function byT(a,b){ return (b.t||0)-(a.t||0); }
-  pending.sort(byT); doneList.sort(byT);
+  pending.sort(byT); doneList.sort(byT); newList.sort(byT);
   S={days:days,pool:pool.filter(function(p){ return !del[p.id]; }),
-     pending:pending,doneList:doneList,fav:fav,rate:rate,doneN:doneN};
+     pending:pending,doneList:doneList,newList:newList,fav:fav,rate:rate,doneN:doneN};
 }
 function pad(n){ return String(n).padStart(2,'0'); }
 function ds(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
@@ -704,20 +719,10 @@ function keep(rid,who){ var bad=0, now=new Date(), t=today(), f=firstDay();
 }
 
 /* ===================== 違反の記録（＝罰ゲーム自動確定） ===================== */
-function addVio(who,rid,k){
-  var a=poolFor(who), pick=a[Math.floor(Math.random()*a.length)], d=k.split('-');
-  var no=S.pool.indexOf(pick); no=no<0?0:no+1;
-  var pid='n'+uid(), dt=(+d[1])+'/'+(+d[2]);
-  addEv({k:'v',w:who,d:k,r:rid});
-  addEv({k:'pn',w:who,id:pid,tx:pick.text,no:no,d:dt});
-  return {id:pid,who:who,no:no,text:pick.text,date:dt};
-}
+function addVio(who,rid,k){ addEv({k:'v',w:who,d:k,r:rid}); return true; }
 function subVio(who,rid,k){
   if(vio(k,who,rid)<=0) return false;
-  var mine=S.pending.filter(function(p){ return p.who===who; });
-  addEv({k:'v-',w:who,d:k,r:rid});
-  if(mine.length) addEv({k:'pk',id:mine[mine.length-1].id});
-  return true;
+  addEv({k:'v-',w:who,d:k,r:rid}); return true;
 }
 
 /* ===================== 画面 ===================== */
@@ -812,61 +817,51 @@ function vCal(){
 function vList(){
   var ps=pend(me), h='';
   h+='<div class="sect" style="margin-top:6px"><div class="stats">'+
-     '<div class="stat"><div class="n" style="color:var(--nf)">'+ps.length+'</div><div class="l">未実行の<br>罰ゲーム</div></div>'+
+     '<div class="stat"><div class="n" style="color:var(--nf)">'+(ps.length+S.newList.filter(function(p){return p.who===me;}).length)+'</div><div class="l">未実行の<br>罰ゲーム</div></div>'+
      '<div class="stat"><div class="n">'+(S.doneN[me]||0)+'</div><div class="l">実行<br>済み</div></div>'+
      '<div class="stat"><div class="n" style="color:var(--grn)">'+streak(me)+'</div><div class="l">連続<br>予定送信</div></div>'+
      '</div></div>';
 
+  var mnew=S.newList.filter(function(p){ return p.who===me; });
   var mine=S.pending.filter(function(p){ return p.who===me; });
   var mdone=S.doneList.filter(function(p){ return p.who===me; });
-  function penRow(p,done){
-    return '<button class="pen'+(done?' ok':'')+'" data-act="toggle" data-id="'+esc(p.id)+'">'+
-      '<span class="px">'+esc(p.no||'･')+'</span>'+
+  function penRow(p,state){
+    var cls = state==='done'?' ok':(state==='new'?' nw':'');
+    var pill = state==='done'?'<span class="pill p-ok">実行済み</span>'
+             : state==='new'?'<span class="pill p-ng">未確認</span>'
+             : '<span class="pill p-ng">まだ</span>';
+    return '<button class="pen'+cls+'" data-act="'+(state==='new'?'ackone':'toggle')+'" data-id="'+esc(p.id)+'">'+
+      '<span class="px">'+(state==='new'?'!':esc(p.no||'･'))+'</span>'+
       '<span class="pin"><span class="pt">'+esc(p.text)+'</span>'+
-      '<span class="pm">'+esc(p.date)+(p.by?' ・ '+esc(NAME[p.by]||'')+'から':' ・ 抽選')+(done?' ・ 実行ずみ':'')+'</span></span>'+
-      '<span class="pill '+(done?'p-ok':'p-ng')+'">'+(done?'実行済み':'まだ')+'</span></button>';
+      '<span class="pm">'+esc(p.date)+(p.by?' ・ '+esc(NAME[p.by]||'')+'から':'')+
+      (state==='new'?' ・ タップで確認':(state==='done'?' ・ 実行ずみ':''))+'</span></span>'+
+      pill+'</button>';
   }
-  h+='<div class="sect"><h2>'+esc(NAME[me])+'さんに課された罰ゲーム</h2>';
-  if(mine.length||mdone.length){
-    h+=mine.map(function(p){ return penRow(p,false); }).join('');
-    h+=mdone.map(function(p){ return penRow(p,true); }).join('');
+  h+='<div class="sect"><h2>'+esc(NAME[me])+'さんに科された罰ゲーム</h2>';
+  if(mnew.length||mine.length||mdone.length){
+    h+=mnew.map(function(p){ return penRow(p,'new'); }).join('');
+    h+=mine.map(function(p){ return penRow(p,'open'); }).join('');
+    h+=mdone.map(function(p){ return penRow(p,'done'); }).join('');
     h+='<div style="padding:11px 16px 0;color:#808080;font-size:10.5px">'+
        'タップすると「まだ」と「実行済み」を切り替えられます。</div>';
   }else{
     h+='<div style="padding:22px 16px;color:#808080;font-size:12px">'+
-       '課された罰ゲームはありません。掟を破ると、ここに自動で1件たまります。</div>';
+       '科された罰ゲームはありません。</div>';
   }
   h+='</div>';
 
-  var custom=S.pool.filter(function(x){ return x.by; });
-  h+='<div class="sect"><h2>罰ゲームを渡す</h2><div class="addbox">'+
+  h+='<div class="sect"><h2>罰ゲームを科す</h2><div class="addbox">'+
      '<input id="newPen" type="text" maxlength="60" placeholder="例：一日、理央様と呼ぶ" value="'+esc(draft)+'">'+
      '<div class="seg3">'+
        '<button data-act="tg" data-t="momoka" aria-pressed="'+(newTarget==='momoka')+'">桃香に</button>'+
        '<button data-act="tg" data-t="rio" aria-pressed="'+(newTarget==='rio')+'">理央に</button>'+
        '<button data-act="tg" data-t="both" aria-pressed="'+(newTarget==='both')+'">両方に</button>'+
      '</div>'+
-     '<button class="bigbtn b-red" data-act="give" style="margin:0 0 8px">'+
-     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>いますぐ科す</button>'+
-     '<button class="bigbtn b-sub" data-act="add" style="margin:0">'+
-     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="9" cy="9" r="1.6" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1.6" fill="currentColor" stroke="none"/></svg>抽選の箱に入れる</button>'+
+     '<button class="bigbtn b-red" data-act="give" style="margin:0">'+
+     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg>送る</button>'+
      '<div style="font-size:10.5px;color:#808080;margin-top:11px;line-height:1.7">'+
-     '<b style="color:#E5E5E5">いますぐ科す</b>＝相手の画面にすぐ届きます。<br>'+
-     '<b style="color:#E5E5E5">抽選の箱に入れる</b>＝相手が掟を破ったとき、ここから当たります（現在 '+S.pool.length+' 件）。'+
+     '送ると相手の画面に全面で出ます。<b style="color:#E5E5E5">相手が「確認しました」を押すまで消えません。</b>'+
      '</div></div></div>';
-
-  if(custom.length){
-    h+='<div class="sect"><h2>抽選の箱に入れたもの</h2>';
-    custom.forEach(function(x){
-      h+='<div class="pen"><span class="px" style="background:#1F1F1F;color:#B3B3B3">箱</span>'+
-        '<span class="pin"><span class="pt">'+esc(x.text)+'</span>'+
-        '<span class="pm">'+(x.target==='both'?'両方に':esc(NAME[x.target]||'?')+'に')+
-        ' ・ '+esc(NAME[x.by]||'?')+'が追加</span></span>'+
-        '<button class="del" data-act="delpen" data-id="'+esc(x.id)+'" aria-label="削除">'+
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
-    });
-    h+='</div>';
-  }
 
   var favs=RULES.filter(function(r){ return S.fav[r.id]; });
   h+='<div class="sect"><h2>マイリスト</h2>';
@@ -895,11 +890,10 @@ function vDetail(id){
      '<span class="tagbox">TV-MA</span><span>'+r.no+'</span><span class="tagfill">HD</span><span class="tagbox">AD</span></div>';
 
   if(r.cnt){
-    h+='<button class="bigbtn b-red'+(reveal?' pulse':'')+'" data-act="vio" data-rule="'+id+'">'+
+    h+='<button class="bigbtn b-red" data-act="vio" data-rule="'+id+'">'+
        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 1.8 20.5h20.4z"/><path d="M12 10v4.4M12 17.4v.2"/></svg>違反（＋1）</button>';
     h+='<button class="bigbtn b-sub" data-act="undo" data-rule="'+id+'">'+
        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>訂正（−1）</button>';
-    if(reveal) h+=revealHTML();
     h+='<div class="timeline"><span class="bar"><i style="width:'+Math.min(100,vio(t,me,id)*20)+'%"></i></span>'+
        '<span class="lb">本日 '+vio(t,me,id)+' 件 ／ 通算 '+totalVio(me,id)+' 件</span></div>';
   }else{
@@ -964,16 +958,30 @@ function vDetail(id){
   h+='</div></div>';
   return h;
 }
-function revealHTML(){
-  return '<div class="reveal" id="rev"><div class="cnt">罰ゲーム 自動抽選</div>'+
-    '<div class="tx spin" id="revTx">'+esc(poolFor(me)[0].text)+'</div>'+
-    '<div class="ft" id="revFt">抽選中…</div></div>';
-}
 
 /* ===================== 描画 ===================== */
 var screenEl=document.getElementById('screen'), detailEl=document.getElementById('detail');
 var appEl=document.getElementById('app'), gateEl=document.getElementById('gate'), tabbarEl=document.getElementById('tabbar');
 
+function renderAck(){
+  var box=document.getElementById('ackLayer');
+  var list=me?S.newList.filter(function(p){ return p.who===me; }):[];
+  var dot=document.getElementById('tbdot');
+  if(dot){ dot.hidden=!list.length; dot.textContent=list.length; }
+  if(!box) return;
+  if(!list.length){ box.hidden=true; box.innerHTML=''; return; }
+  box.hidden=false;
+  box.innerHTML='<div class="ack"><div class="ackbox">'+
+    '<div class="eb">'+esc(NAME[list[0].by]||'')+' より</div>'+
+    '<h3>罰ゲームが届きました</h3>'+
+    '<p class="sb">確認するまで、この画面は閉じられません。</p>'+
+    list.map(function(p){
+      return '<div class="ackitem"><div class="at">'+esc(p.text)+'</div>'+
+        '<div class="am">'+esc(p.date)+' ・ '+esc(NAME[p.by]||'')+'が科しました</div>'+
+        '<button class="bigbtn b-play" data-act="ackone" data-id="'+esc(p.id)+'">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5.5 5.5L20 7"/></svg>確認しました</button></div>';
+    }).join('')+'</div></div>';
+}
 function render(){
   if(!me){ gateEl.hidden=false; appEl.hidden=true; tabbarEl.hidden=true; detailEl.hidden=true;
     document.getElementById('gateArt').innerHTML=
@@ -988,6 +996,7 @@ function render(){
     b.setAttribute('aria-current', b.getAttribute('data-tab')===tab?'true':'false'); });
   if(openId){ detailEl.hidden=false; detailEl.innerHTML=vDetail(openId); }
   else{ detailEl.hidden=true; detailEl.innerHTML=''; detailEl.classList.remove('open'); }
+  renderAck();
 }
 
 /* ===================== 音 ===================== */
@@ -1014,22 +1023,6 @@ function blip(f){ if(LOC.mute) return; var a=ac(); if(!a) return;
 function buzz(n){ if(navigator.vibrate) navigator.vibrate(n||18); }
 
 /* ===================== 抽選演出 ===================== */
-function runReveal(it){
-  var tx=document.getElementById('revTx'), ft=document.getElementById('revFt');
-  if(!tx) return;
-  var a=poolFor(me), i=Math.floor(Math.random()*a.length), n=0, total=15+Math.floor(Math.random()*6);
-  (function step(){
-    i=(i+1)%a.length; n++;
-    tx.textContent=a[i].text; blip(300+n*16);
-    if(n<total){ setTimeout(step,46+n*n*1.9); }
-    else{
-      tx.textContent=it.text; tx.className='tx';
-      ft.textContent='第'+it.no+'号 ・ マイリストに追加しました';
-      tudum(); buzz([22,46,22]);
-    }
-  })();
-}
-
 /* ===================== 操作 ===================== */
 document.addEventListener('input',function(ev){
   if(ev.target&&ev.target.id==='newPen') draft=ev.target.value;
@@ -1056,8 +1049,8 @@ document.addEventListener('click',function(ev){
 
   if(a==='vio'){
     var rid=el.getAttribute('data-rule');
-    var it=addVio(me,rid,t); reveal=it; buzz(28); render();
-    detailEl.classList.remove('open'); runReveal(it); return;
+    addVio(me,rid,t); buzz(28); blip(200); render();
+    detailEl.classList.remove('open'); return;
   }
   if(a==='undo'){
     var rid2=el.getAttribute('data-rule');
@@ -1094,6 +1087,9 @@ document.addEventListener('click',function(ev){
   if(a==='done'){
     addEv({k:'pc',id:el.getAttribute('data-id')});
     blip(880); buzz(); render(); return; }
+  if(a==='ackone'){
+    addEv({k:'pv',id:el.getAttribute('data-id')});
+    blip(760); buzz(); render(); return; }
   if(a==='toggle'){
     var tid=el.getAttribute('data-id');
     var isDone=S.doneList.some(function(p){ return p.id===tid; });
@@ -1131,7 +1127,7 @@ document.addEventListener('click',function(ev){
 },false);
 
 /* ---- 新しい版が出ていたら、自動で入れ替わる ---- */
-var BUILD='20260929-015056';
+var BUILD='20260929-020425';
 setTimeout(function(){
   try{
     if(sessionStorage.getItem('okite-reloaded')) return;
