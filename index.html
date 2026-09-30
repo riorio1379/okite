@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>二人の掟</title>
 <meta name="theme-color" content="#000000">
-<meta name="app-build" content="20260929-022207">
+<meta name="app-build" content="20260930-160036">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="description" content="桃香と理央の掟。">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -381,6 +381,7 @@
 
 <div id="detail" hidden></div>
 <div id="ackLayer" hidden></div>
+<div id="sentLayer" hidden></div>
 
 <div class="tabbar" id="tabbar" hidden>
   <button class="tb" data-act="tab" data-tab="home" aria-current="true">
@@ -747,7 +748,7 @@ function subVio(who,rid,k){
 }
 
 /* ===================== 画面 ===================== */
-var me=null, tab='home', openId=null, dTab='epi', reveal=null;
+var me=null, tab='home', openId=null, dTab='epi', reveal=null, sentBox=null;
 var draft='', newTarget='both';
 var selK=today(), vY=new Date().getFullYear(), vM=new Date().getMonth();
 
@@ -1015,6 +1016,22 @@ function vDetail(id){
 var screenEl=document.getElementById('screen'), detailEl=document.getElementById('detail');
 var appEl=document.getElementById('app'), gateEl=document.getElementById('gate'), tabbarEl=document.getElementById('tabbar');
 
+function renderSent(){
+  var box=document.getElementById('sentLayer'); if(!box) return;
+  if(!sentBox){ box.hidden=true; box.innerHTML=''; return; }
+  var msg='【罰ゲーム】'+sentBox.text+'\n'+location.origin+location.pathname;
+  box.hidden=false;
+  box.innerHTML='<div class="ack"><div class="ackbox">'+
+    '<div class="eb">送信済み</div><h3>'+esc(NAME[sentBox.to]||'')+' へ</h3>'+
+    '<p class="sb">相手の確認待ち</p>'+
+    '<div class="ackitem"><div class="at">'+esc(sentBox.text)+'</div></div>'+
+    '<button class="bigbtn b-play" data-act="lineshare" style="margin:12px 0 0;min-height:44px">'+
+    '<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.2 9.6 9.6 0 0 1-2.3-.3L5 21l1.2-3.4A8 8 0 0 1 4 11.5C4 6.9 7.8 3.3 12.5 3.3S21 6.9 21 11.5z"/></svg>'+
+    'LINEで通知</button>'+
+    '<button class="bigbtn b-sub" data-act="sentclose" style="margin:8px 0 0;min-height:40px">閉じる</button>'+
+    '</div></div>';
+  box.setAttribute('data-msg',msg);
+}
 function renderAck(){
   var box=document.getElementById('ackLayer');
   var list=me?S.newList.filter(function(p){ return p.who===me; }):[];
@@ -1048,7 +1065,7 @@ function render(){
     b.setAttribute('aria-current', b.getAttribute('data-tab')===tab?'true':'false'); });
   if(openId){ detailEl.hidden=false; detailEl.innerHTML=vDetail(openId); }
   else{ detailEl.hidden=true; detailEl.innerHTML=''; detailEl.classList.remove('open'); }
-  renderAck();
+  renderAck(); renderSent();
 }
 
 /* ===================== 音 ===================== */
@@ -1139,6 +1156,12 @@ document.addEventListener('click',function(ev){
   if(a==='done'){
     addEv({k:'pc',id:el.getAttribute('data-id')});
     blip(880); buzz(); render(); return; }
+  if(a==='lineshare'){
+    var bx=document.getElementById('sentLayer');
+    var msg=bx?bx.getAttribute('data-msg'):'';
+    location.href='https://line.me/R/msg/text/?'+encodeURIComponent(msg);
+    return; }
+  if(a==='sentclose'){ sentBox=null; blip(420); render(); return; }
   if(a==='propose'){
     tab='list'; newTarget=(me==='rio'?'momoka':'rio'); openId=null; blip(660); render();
     window.scrollTo(0,0);
@@ -1175,6 +1198,7 @@ document.addEventListener('click',function(ev){
     tgs.forEach(function(w){
       addEv({k:'pn',w:w,g:me,id:'g'+uid(),tx:tx3,no:0,d:ds2});
     });
+    sentBox={text:tx3,to:(newTarget==='both'?(me==='rio'?'momoka':'rio'):newTarget)};
     draft=''; blip(900); buzz([22,46,22]); tudum(); render(); return; }
   if(a==='delpen'){
     var pid=el.getAttribute('data-id');
@@ -1187,7 +1211,7 @@ document.addEventListener('click',function(ev){
 },false);
 
 /* ---- 新しい版が出ていたら、自動で入れ替わる ---- */
-var BUILD='20260929-022207';
+var BUILD='20260930-160036';
 setTimeout(function(){
   try{
     if(sessionStorage.getItem('okite-reloaded')) return;
