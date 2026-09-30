@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>二人の掟</title>
 <meta name="theme-color" content="#000000">
-<meta name="app-build" content="20260930-160607">
+<meta name="app-build" content="20260930-160827">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="description" content="桃香と理央の掟。">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -395,6 +395,7 @@
 <div id="ackLayer" hidden></div>
 <div id="sentLayer" hidden></div>
 <div id="toastLayer" class="toastwrap" hidden></div>
+<div id="editLayer" hidden></div>
 
 <div class="tabbar" id="tabbar" hidden>
   <button class="tb" data-act="tab" data-tab="home" aria-current="true">
@@ -425,7 +426,7 @@ function saveLocal(){ try{ localStorage.setItem(LKEY,JSON.stringify(EV));
   localStorage.setItem(LLOC,JSON.stringify(LOC)); }catch(e){} }
 function save(){ saveLocal(); push(); }
 /* 受け取ったイベントは全て検証する。行は誰でも書けるので、中身を信用しない */
-var KINDS={'v':1,'v-':1,'s':1,'pa':1,'pd':1,'pn':1,'pc':1,'pu':1,'pv':1,'pk':1,'f':1,'rt':1,'zz':1};
+var KINDS={'v':1,'v-':1,'s':1,'pa':1,'pd':1,'pn':1,'pc':1,'pu':1,'pv':1,'pk':1,'pe':1,'f':1,'rt':1,'zz':1};
 var WHO={momoka:1,rio:1}, RID={reply:1,plan:1,eye:1,lie:1}, TG={both:1,momoka:1,rio:1};
 function sid(x){ return (typeof x==='string'&&/^[A-Za-z0-9_.:-]{1,64}$/.test(x))?x:null; }
 function stx(x,n){ return (typeof x==='string'&&x.length>0&&x.length<=n)?x:null; }
@@ -439,6 +440,7 @@ function okEv(e){
   else if(e.k==='s'){ if(!o.w||!isDay(e.d)) return null; o.d=e.d; o.v=!!e.v; }
   else if(e.k==='pa'){ if(!sid(e.id)||!stx(e.tx,200)||!TG[e.tg]) return null;
     o.id=e.id; o.tx=e.tx; o.tg=e.tg; }
+  else if(e.k==='pe'){ if(!sid(e.id)||!stx(e.tx,200)) return null; o.id=e.id; o.tx=e.tx; }
   else if(e.k==='pd'||e.k==='pc'||e.k==='pu'||e.k==='pv'||e.k==='pk'){ if(!sid(e.id)) return null; o.id=e.id; }
   else if(e.k==='pn'){ if(!o.w||!sid(e.id)||!stx(e.tx,200)) return null;
     o.id=e.id; o.tx=e.tx;
@@ -460,7 +462,7 @@ function addEv(e){ e.i=e.i||uid(); e.t=e.t||Date.now();
 function fold(){
   EV.sort(function(a,b){ return (a.t||0)-(b.t||0); });
   var cut=0; EV.forEach(function(e){ if(e.k==='zz'&&e.t>cut) cut=e.t; });
-  var days={}, pool=[], del={}, pn={}, st={}, ack={}, fav={}, rate={};
+  var days={}, pool=[], del={}, pn={}, st={}, ack={}, edit={}, fav={}, rate={};
   DEF.forEach(function(t,i){ pool.push({id:'d'+i,text:t,target:'both',by:null}); });
   function D(k){ if(!days[k]) days[k]={v:{momoka:{},rio:{}},sent:{}}; return days[k]; }
   EV.forEach(function(e){
@@ -471,6 +473,7 @@ function fold(){
     else if(e.k==='pa'){ pool.push({id:e.id,text:e.tx,target:e.tg,by:e.w}); }
     else if(e.k==='pd'){ del[e.id]=1; }
     else if(e.k==='pn'){ pn[e.id]={id:e.id,who:e.w,no:e.no,text:e.tx,date:e.d,t:e.t,by:e.g||null}; }
+    else if(e.k==='pe'){ edit[e.id]=e.tx; }
     else if(e.k==='pv'){ ack[e.id]=1; }
     else if(e.k==='pc'){ st[e.id]='done'; }
     else if(e.k==='pu'){ st[e.id]='open'; }
@@ -479,6 +482,7 @@ function fold(){
     else if(e.k==='rt'){ rate[e.r]=!!e.v; }
   });
   var pending=[], doneList=[], newList=[], doneN={momoka:0,rio:0}, id;
+  for(id in edit){ if(pn[id]) pn[id].text=edit[id]; }
   for(id in pn){
     if(st[id]==='cancel') continue;
     var it=pn[id];
@@ -916,6 +920,24 @@ function vList(){
   }
   h+='</div>';
 
+  var isent=S.newList.concat(S.pending,S.doneList).filter(function(p){ return p.by===me; })
+        .sort(function(a,b){ return (b.t||0)-(a.t||0); });
+  if(isent.length){
+    h+='<div class="sect"><h2>'+esc(NAME[me])+'さんが送った罰ゲーム</h2>';
+    isent.forEach(function(p){
+      var stt=S.doneList.some(function(x){ return x.id===p.id; })?'実行済み'
+             :(S.newList.some(function(x){ return x.id===p.id; })?'未確認':'まだ');
+      h+='<div class="pen"><span class="px" style="background:#1F1F1F;color:#B3B3B3">→</span>'+
+        '<span class="pin"><span class="pt">'+esc(p.text)+'</span>'+
+        '<span class="pm">'+esc(NAME[p.who]||'')+'へ ・ '+stt+'</span></span>'+
+        '<button class="del" data-act="editpen" data-id="'+esc(p.id)+'" aria-label="変更">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4l4 4-11 11-5 1 1-5z"/></svg></button>'+
+        '<button class="del" data-act="delpen2" data-id="'+esc(p.id)+'" aria-label="削除">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+    });
+    h+='<div style="padding:11px 16px 0;color:#808080;font-size:10.5px">変更 ・ 削除 はいつでも可能</div></div>';
+  }
+
   h+='<div class="sect"><h2>罰ゲームを科す</h2><div class="addbox">'+
      '<input id="newPen" type="text" maxlength="60" placeholder="例：一日、理央様と呼ぶ" value="'+esc(draft)+'">'+
      '<div class="seg3">'+
@@ -1029,12 +1051,25 @@ function vDetail(id){
 var screenEl=document.getElementById('screen'), detailEl=document.getElementById('detail');
 var appEl=document.getElementById('app'), gateEl=document.getElementById('gate'), tabbarEl=document.getElementById('tabbar');
 
-var toast=null, toastT=null;
+var editBox=null, toast=null, toastT=null;
+function renderEdit(){
+  var b=document.getElementById('editLayer'); if(!b) return;
+  if(!editBox){ b.hidden=true; b.innerHTML=''; return; }
+  b.hidden=false;
+  b.innerHTML='<div class="ack"><div class="ackbox">'+
+    '<div class="eb">罰ゲームの変更</div><h3>'+esc(NAME[editBox.to]||'')+' へ</h3>'+
+    '<p class="sb">相手の画面にも反映されます</p>'+
+    '<div class="addbox" style="margin:0;padding:0">'+
+    '<input id="editPen" type="text" maxlength="60" value="'+esc(editBox.text)+'"></div>'+
+    '<button class="bigbtn b-play" data-act="editsave" style="margin:12px 0 0;min-height:44px">保存</button>'+
+    '<button class="bigbtn b-sub" data-act="editclose" style="margin:8px 0 0;min-height:40px">閉じる</button>'+
+    '</div></div>';
+}
 var VIOMSG={reply:'1時間返信できなかったので、1つ違反がつきました',
   eye:'異性と目を合わせたので、1つ違反がつきました',
   lie:'嘘をついたので、1つ違反がつきました'};
-function showToast(label,msg){
-  toast={label:label,msg:msg};
+function showToast(eb,label,msg){
+  toast={eb:eb,label:label,msg:msg};
   if(toastT) clearTimeout(toastT);
   toastT=setTimeout(function(){ toast=null; renderToast(); },9000);
   renderToast();
@@ -1043,7 +1078,7 @@ function renderToast(){
   var b=document.getElementById('toastLayer'); if(!b) return;
   if(!toast){ b.hidden=true; b.innerHTML=''; return; }
   b.hidden=false;
-  b.innerHTML='<div class="toast"><div class="tl"><i>違反 記録済み</i>'+
+  b.innerHTML='<div class="toast"><div class="tl"><i>'+esc(toast.eb)+'</i>'+
     '<span>'+esc(toast.label)+'</span></div>'+
     '<button class="tb2" data-act="toastline">LINEで通知</button>'+
     '<button class="tx2" data-act="toastclose" aria-label="閉じる">×</button></div>';
@@ -1098,7 +1133,7 @@ function render(){
     b.setAttribute('aria-current', b.getAttribute('data-tab')===tab?'true':'false'); });
   if(openId){ detailEl.hidden=false; detailEl.innerHTML=vDetail(openId); }
   else{ detailEl.hidden=true; detailEl.innerHTML=''; detailEl.classList.remove('open'); }
-  renderAck(); renderSent(); renderToast();
+  renderAck(); renderSent(); renderToast(); renderEdit();
 }
 
 /* ===================== 音 ===================== */
@@ -1152,7 +1187,7 @@ document.addEventListener('click',function(ev){
   if(a==='vio'){
     var rid=el.getAttribute('data-rule');
     addVio(me,rid,t); buzz(28); blip(200);
-    showToast(R(rid).no+' '+R(rid).t, (VIOMSG[rid]||'違反が1つつきました')+'\n'+location.origin+location.pathname);
+    showToast('違反 記録済み', R(rid).no+' '+R(rid).t, (VIOMSG[rid]||'違反が1つつきました')+'\n'+location.origin+location.pathname);
     render(); detailEl.classList.remove('open'); return;
   }
   if(a==='undo'){
@@ -1190,6 +1225,23 @@ document.addEventListener('click',function(ev){
   if(a==='done'){
     addEv({k:'pc',id:el.getAttribute('data-id')});
     blip(880); buzz(); render(); return; }
+  if(a==='editpen'){
+    var eid=el.getAttribute('data-id'), tgt=null, txt='';
+    S.newList.concat(S.pending,S.doneList).forEach(function(p){
+      if(p.id===eid){ txt=p.text; tgt=p.who; } });
+    editBox={id:eid,text:txt,to:tgt}; blip(620); render();
+    setTimeout(function(){ var f=document.getElementById('editPen'); if(f) f.focus(); },140);
+    return; }
+  if(a==='editsave'){
+    var f2=document.getElementById('editPen'), nt=(f2?f2.value:'').trim();
+    if(!nt||!editBox){ blip(170); return; }
+    addEv({k:'pe',id:editBox.id,tx:nt});
+    editBox=null; blip(820); buzz(); render(); return; }
+  if(a==='editclose'){ editBox=null; blip(420); render(); return; }
+  if(a==='delpen2'){
+    if(!confirm('この罰ゲームを削除します。よろしいですか？')) return;
+    addEv({k:'pk',id:el.getAttribute('data-id')});
+    blip(300); buzz(); render(); return; }
   if(a==='toastline'){
     var tb=document.getElementById('toastLayer');
     location.href='https://line.me/R/msg/text/?'+encodeURIComponent(tb?tb.getAttribute('data-msg'):'');
@@ -1213,9 +1265,14 @@ document.addEventListener('click',function(ev){
     addEv({k:'pv',id:el.getAttribute('data-id')});
     blip(760); buzz(); render(); return; }
   if(a==='toggle'){
-    var tid=el.getAttribute('data-id');
+    var tid=el.getAttribute('data-id'), item=null;
+    S.pending.concat(S.newList,S.doneList).forEach(function(p){ if(p.id===tid) item=p; });
     var isDone=S.doneList.some(function(p){ return p.id===tid; });
     addEv({k:isDone?'pu':'pc',id:tid});
+    if(!isDone&&item){
+      showToast('実行 記録済み', item.text,
+        '「'+item.text+'」という罰ゲームを実行しました\n'+location.origin+location.pathname);
+    }
     blip(isDone?360:880); buzz(); render(); return; }
 
   if(a==='tg'){
@@ -1250,7 +1307,7 @@ document.addEventListener('click',function(ev){
 },false);
 
 /* ---- 新しい版が出ていたら、自動で入れ替わる ---- */
-var BUILD='20260930-160607';
+var BUILD='20260930-160827';
 setTimeout(function(){
   try{
     if(sessionStorage.getItem('okite-reloaded')) return;
